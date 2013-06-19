@@ -148,7 +148,8 @@ private:
 
     // Some bool variables
     bool _pcdLoaded, _planeDefined;
-    bool _insertingObject, _objectModifed, _cloudModified;
+    bool _insertingObject, _objectModifed;
+    bool _itemSelected, _cloudModified;
 
     /** \brief Function to initialize
       */

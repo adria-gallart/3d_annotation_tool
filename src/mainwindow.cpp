@@ -163,62 +163,85 @@ void MainWindow::on_buttonRollLess_clicked(){
 // Next 9 functions: Slots to modify the width, length
 // and height value of the bounding box
 void MainWindow::on_boxWidth_valueChanged(double arg1){
-    _boxWidth = ui->boxWidth->value()/100;
     if(_insertingObject){
+        _boxWidth = ui->boxWidth->value()/100;
         actualizeBoxWidth();
+    }
+
+    if(!_itemSelected && !_insertingObject){
+        ui->boxWidth->setValue(0);
     }
 }
 
 void MainWindow::on_boxWidthMore_clicked(){
-    _boxWidth += 0.01;
-    ui->boxWidth->setValue(_boxWidth*100);
-    actualizeBoxWidth();
+    if(_insertingObject){
+        _boxWidth += 0.01;
+        ui->boxWidth->setValue(_boxWidth*100);
+        actualizeBoxWidth();
+    }
 }
 
 void MainWindow::on_boxWidthLess_clicked(){
-    _boxWidth -= 0.01;
-    ui->boxWidth->setValue(_boxWidth*100);
-    actualizeBoxWidth();
+    if(_insertingObject){
+        _boxWidth -= 0.01;
+        ui->boxWidth->setValue(_boxWidth*100);
+        actualizeBoxWidth();
+    }
 }
 
 void MainWindow::on_boxLength_valueChanged(double arg1){
-    _boxLength = ui->boxLength->value()/100;
     if(_insertingObject){
+        _boxLength = ui->boxLength->value()/100;
        actualizeBoxLength();
+    }
+
+    if(!_itemSelected && !_insertingObject){
+        ui->boxLength->setValue(0);
     }
 }
 
 void MainWindow::on_boxLengthMore_clicked(){
-    _boxLength += 0.01;
-    ui->boxLength->setValue(_boxLength*100);
-    actualizeBoxLength();
+    if(_insertingObject){
+        _boxLength += 0.01;
+        ui->boxLength->setValue(_boxLength*100);
+        actualizeBoxLength();
+    }
 }
 
 void MainWindow::on_boxLengthLess_clicked(){
-    _boxLength -= 0.01;
-    ui->boxLength->setValue(_boxLength*100);
-    actualizeBoxLength();
+    if(_insertingObject){
+        _boxLength -= 0.01;
+        ui->boxLength->setValue(_boxLength*100);
+        actualizeBoxLength();
+    }
 }
 
 void MainWindow::on_boxHeight_valueChanged(double arg1){
-    _boxHeight = ui->boxHeight->value()/100;
     if(_insertingObject){
+        _boxHeight = ui->boxHeight->value()/100;
         actualizeBoxHeight();
+    }
+
+    if(!_itemSelected && !_insertingObject){
+        ui->boxHeight->setValue(0);
     }
 }
 
 void MainWindow::on_boxHeightMore_clicked(){
-    _boxHeight += 0.01;
-    ui->boxHeight->setValue(_boxHeight*100);
-    actualizeBoxHeight();
+     if(_insertingObject){
+         _boxHeight += 0.01;
+         ui->boxHeight->setValue(_boxHeight*100);
+         actualizeBoxHeight();
+     }
 }
 
 void MainWindow::on_boxHeightLess_clicked(){
-    _boxHeight -= 0.01;
-    ui->boxHeight->setValue(_boxHeight*100);
-    actualizeBoxHeight();
+    if(_insertingObject){
+        _boxHeight -= 0.01;
+        ui->boxHeight->setValue(_boxHeight*100);
+        actualizeBoxHeight();
+    }
 }
-
 
 // Save pcd file action
 void MainWindow::on_actionSave_PCD_File_triggered(){
@@ -251,6 +274,8 @@ void MainWindow::on_treeWidget_itemSelectionChanged(){
     }
 
     _insertingObject = false;
+    _itemSelected = false;
+    std::cout << "Nego item selected!!" << std::endl;
 
     QString text = ui->treeWidget->currentItem()->text(0);
 
@@ -264,6 +289,7 @@ void MainWindow::on_treeWidget_itemSelectionChanged(){
     }
     // If only one object is selected it is shown with the bounding box
     else if (objectsInfo.getIndex(text) != -1){
+        _itemSelected = true;
         // Get the information about the current object selected
         int index = objectsInfo.getIndex(text);
         pcl::PointIndices indices;
@@ -290,6 +316,7 @@ void MainWindow::on_treeWidget_itemSelectionChanged(){
         _boxYaw = yaw;
         _insertingObject = true;
         _objectModifed = false;
+        std::cout << "Item selected: " << _itemSelected << std::endl;
     }
     else{
         // Not shown any object
@@ -618,51 +645,60 @@ void MainWindow::on_actionBack_triggered(){
 // Action to take when a value on the pose widget is
 // changed manualy
 void MainWindow::on_poseInfo_itemChanged(QTreeWidgetItem *item, int column){
-    bool isNumber;
-    float insertedNumber = item->text(1).toFloat(&isNumber);
+    if(_insertingObject){
+        bool isNumber;
+        float insertedNumber = item->text(1).toFloat(&isNumber);
 
-    if(isNumber){
-        if(item->text(0).startsWith(QString::fromStdString("X (m)"))){
-            _objectPose.x = insertedNumber;
-            actualizePose();
-        }
-        else if(item->text(0).startsWith(QString::fromStdString("Y (m)"))){
-            _objectPose.y = insertedNumber;
-            actualizePose();
-        }
-        else if(item->text(0).startsWith(QString::fromStdString("Z (m)"))){
-            _objectPose.z = insertedNumber;
-           actualizePose();
-        }
-        else if(item->text(0).startsWith(QString::fromStdString("Roll"))){
-            if(insertedNumber <= 360.0 && insertedNumber >=0.0){
-                _boxRoll = pcl::deg2rad(insertedNumber);
-                actualizeRotation();
+        if(isNumber){
+            if(item->text(0).startsWith(QString::fromStdString("X (m)"))){
+                _objectPose.x = insertedNumber;
+                actualizePose();
             }
-            else
-                QMessageBox::warning(this, "Incorrect value", "Insert an angle value between 0 and 360.");
-        }
-        else if(item->text(0).startsWith(QString::fromStdString("Pitch"))){
-            if(insertedNumber <= 360.0 && insertedNumber >=0.0){
-                _boxPitch = pcl::deg2rad(insertedNumber);
-                actualizeRotation();
+            else if(item->text(0).startsWith(QString::fromStdString("Y (m)"))){
+                _objectPose.y = insertedNumber;
+                actualizePose();
             }
-            else
-                QMessageBox::warning(this, "Incorrect value", "Insert an angle value between 0 and 360.");
-        }
-        else if(item->text(0).startsWith(QString::fromStdString("Yaw"))){
-            if(insertedNumber <= 360.0 && insertedNumber >=0.0){
-                _boxYaw = pcl::deg2rad(insertedNumber);
-                actualizeRotation();
+            else if(item->text(0).startsWith(QString::fromStdString("Z (m)"))){
+                _objectPose.z = insertedNumber;
+                actualizePose();
             }
-            else
-                QMessageBox::warning(this, "Incorrect value", "Insert an angle value between 0 and 360.");
+            else if(item->text(0).startsWith(QString::fromStdString("Roll"))){
+                if(insertedNumber <= 360.0 && insertedNumber >=0.0){
+                    _boxRoll = pcl::deg2rad(insertedNumber);
+                    actualizeRotation();
+                }
+                else
+                    QMessageBox::warning(this, "Incorrect value", "Insert an angle value between 0 and 360.");
+            }
+            else if(item->text(0).startsWith(QString::fromStdString("Pitch"))){
+                if(insertedNumber <= 360.0 && insertedNumber >=0.0){
+                    _boxPitch = pcl::deg2rad(insertedNumber);
+                    actualizeRotation();
+                }
+                else
+                    QMessageBox::warning(this, "Incorrect value", "Insert an angle value between 0 and 360.");
+            }
+            else if(item->text(0).startsWith(QString::fromStdString("Yaw"))){
+                if(insertedNumber <= 360.0 && insertedNumber >=0.0){
+                    _boxYaw = pcl::deg2rad(insertedNumber);
+                    actualizeRotation();
+                }
+                else
+                    QMessageBox::warning(this, "Incorrect value", "Insert an angle value between 0 and 360.");
+            }
+        }
+        else{
+            QMessageBox::warning(this, "Format error", "Value incorrect. Please, insert a number.");
+            item->setText(1, QString::number(0));
         }
     }
-    else{
-        QMessageBox::warning(this, "Format error", "Value incorrect. Please, insert a number.");
-    }
+    else if(!_itemSelected)
+        item->setText(1, QString::number(0));
+
+    //    if(!_insertingObject && !_itemSelected)
+    //        item->setText(1, QString::number(0));
 }
+
 
 ///////////////////////////////////////////////////////
 // The following functions are used inside the above //
@@ -680,6 +716,7 @@ void MainWindow::init(){
     _insertingObject = false;
     _objectModifed = false;
     _cloudModified = false;
+    _itemSelected = false;
 
     //Set to black the background color of the QVTKWidget
     QPalette palette = ui->qvtkWidget->palette();
@@ -688,7 +725,7 @@ void MainWindow::init(){
     ui->qvtkWidget->setAutoFillBackground(true);
 
     //Windows title
-    setWindowTitle("Annotation tool");
+    setWindowTitle("3D annotation tool");
 
     // Read the information left for the user in the previous session
     QString info_doc = qApp->applicationDirPath();
