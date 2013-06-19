@@ -304,8 +304,11 @@ void viewerInteractor::removeBoundingBox(){
     _viewer->removeAllShapes();
 }
 
-void viewerInteractor::setCameraPosition(double posX, double posY, double posZ, double viewX, double viewY, double viewZ){
-    _viewer->setCameraPosition(posX, posY, posZ, viewX, viewY, viewZ, 0);
+void viewerInteractor::setCameraPosition(double posX, double posY, double posZ,
+                                         double viewX, double viewY, double viewZ,
+                                         double upX, double upY, double upZ){
+
+    _viewer->setCameraPose(posX, posY, posZ, viewX, viewY, viewZ, upX, upY, upZ);
     render();
 }
 

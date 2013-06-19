@@ -139,8 +139,9 @@ public:
       */
     void redefineHeight(float height);
 
-    void setCameraPosition(double posX,double posY, double posZ,
-                           double viewX, double viewY, double viewZ);
+    void setCameraPosition(double posX, double posY, double posZ,
+                           double viewX, double viewY, double viewZ,
+                           double upX, double upY, double upZ);
 
     /** \brief Returns the pointer of the render window
       * \param[in] width Width of the window

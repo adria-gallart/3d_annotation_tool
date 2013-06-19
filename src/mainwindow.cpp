@@ -162,7 +162,7 @@ void MainWindow::on_buttonRollLess_clicked(){
 
 // Next 9 functions: Slots to modify the width, length
 // and height value of the bounding box
-void MainWindow::on_boxWidth_valueChanged(double arg1){
+void MainWindow::on_boxWidth_editingFinished(){
     if(_insertingObject){
         _boxWidth = ui->boxWidth->value()/100;
         actualizeBoxWidth();
@@ -189,9 +189,9 @@ void MainWindow::on_boxWidthLess_clicked(){
     }
 }
 
-void MainWindow::on_boxLength_valueChanged(double arg1){
+void MainWindow::on_boxLength_editingFinished(){
     if(_insertingObject){
-        _boxLength = ui->boxLength->value()/100;
+    _boxLength = ui->boxLength->value()/100;
        actualizeBoxLength();
     }
 
@@ -216,7 +216,7 @@ void MainWindow::on_boxLengthLess_clicked(){
     }
 }
 
-void MainWindow::on_boxHeight_valueChanged(double arg1){
+void MainWindow::on_boxHeight_editingFinished(){
     if(_insertingObject){
         _boxHeight = ui->boxHeight->value()/100;
         actualizeBoxHeight();
@@ -226,6 +226,7 @@ void MainWindow::on_boxHeight_valueChanged(double arg1){
         ui->boxHeight->setValue(0);
     }
 }
+
 
 void MainWindow::on_boxHeightMore_clicked(){
      if(_insertingObject){
@@ -275,7 +276,6 @@ void MainWindow::on_treeWidget_itemSelectionChanged(){
 
     _insertingObject = false;
     _itemSelected = false;
-    std::cout << "Nego item selected!!" << std::endl;
 
     QString text = ui->treeWidget->currentItem()->text(0);
 
@@ -316,10 +316,9 @@ void MainWindow::on_treeWidget_itemSelectionChanged(){
         _boxYaw = yaw;
         _insertingObject = true;
         _objectModifed = false;
-        std::cout << "Item selected: " << _itemSelected << std::endl;
     }
     else{
-        // Not shown any object
+        // Don't shown any object
         viewInteractor.cleanViewer();
         clearPoseInfo();
     }
@@ -512,6 +511,7 @@ void MainWindow::on_actionInsert_new_object_triggered(){
                 viewInteractor.defineBoundingBox(_objectPose, _boxRoll, _boxPitch, _boxYaw, _boxLength, _boxWidth, _boxHeight);
                 drawBoxAndPoints();
 
+                std::cout << "Final" << std::endl;
                 // Set the value at the adecuated spin Box
                 ui->boxLength->setValue(_boxLength*100);
                 ui->boxWidth->setValue(_boxWidth*100);
@@ -623,23 +623,23 @@ void MainWindow::on_actionCoordinate_system_toggled(bool arg1){
 // Next 5 functions: Slots to change the position of
 // the camera view
 void MainWindow::on_actionUp_triggered(){
-    viewInteractor.setCameraPosition(0.5, 0.5, 3, 0, 1, 0);
+    viewInteractor.setCameraPosition(0.5, 0.5, 3, 0.5, 0.5, 0, 0, 1, 0);
 }
 
 void MainWindow::on_actionFront_triggered(){
-    viewInteractor.setCameraPosition(0.5, -2, 0, 0, 1, 1);
+    viewInteractor.setCameraPosition(0.5, -2, 0, 0.5, 0, 0, 0, 1, 1);
 }
 
 void MainWindow::on_actionLeft_triggered(){
-    viewInteractor.setCameraPosition(-1, 0.25, 0, 1, 0, 1);
+    viewInteractor.setCameraPosition(-2, 0.5, 0, 0, 0.5, 0, 1, 0, 1);
 }
 
 void MainWindow::on_actionRight_triggered(){
-    viewInteractor.setCameraPosition(3, 0.25, 0, -1, 0, 1);
+    viewInteractor.setCameraPosition(2, 0.5, 0, 0, 0.5, 0, -1, 0, 1);
 }
 
 void MainWindow::on_actionBack_triggered(){
-    viewInteractor.setCameraPosition(1, 3, 0, 0, -1, 1);
+    viewInteractor.setCameraPosition(1, 3, 0, 1, 0, 0, 0, 1, 1);
 }
 
 // Action to take when a value on the pose widget is
@@ -1077,3 +1077,7 @@ void MainWindow::on_actionTest_triggered(){
     //    std::cout << "Show initial: " << showInitialMessage << std::endl;
 
 }
+
+
+
+

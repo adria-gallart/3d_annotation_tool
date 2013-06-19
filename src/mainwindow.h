@@ -36,12 +36,6 @@ private slots:
 
     void on_actionSave_PCD_File_triggered();
 
-    void on_boxWidth_valueChanged(double arg1);
-
-    void on_boxLength_valueChanged(double arg1);
-
-    void on_boxHeight_valueChanged(double arg1);
-
     void on_treeWidget_itemSelectionChanged();
 
     void on_actionAutomatic_plane_detection_triggered();
@@ -115,6 +109,12 @@ private slots:
     void on_boxWidthLess_clicked();
 
     void on_boxLengthLess_clicked();
+
+    void on_boxLength_editingFinished();
+
+    void on_boxWidth_editingFinished();
+
+    void on_boxHeight_editingFinished();
 
 private:
     // The main window used
