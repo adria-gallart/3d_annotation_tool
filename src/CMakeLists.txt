@@ -16,9 +16,9 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 link_directories(${PCL_LIBRARY_DIRS} ${QT_LIBRARY_DIRS} ${VTK_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS} ${QT_DEFINITIONS})
 
-SET(app_tool_SOURCES main.cpp mainwindow.cpp pointcloudmodifier.cpp viewerinteractor.cpp newobjectdialog.cpp objectsinformation.cpp selectobjectdialog.cpp)
-SET(app_tool_HEADERS mainwindow.h pointcloudmodifier.h viewerinteractor.h newobjectdialog.h objectsinformation.h selectobjectdialog.h)
-SET(app_tool_UIS newobjectdialog.ui mainwindow.ui selectobjectdialog.ui)
+SET(app_tool_SOURCES main.cpp mainwindow.cpp pointcloudmodifier.cpp viewerinteractor.cpp newobjectdialog.cpp objectsinformation.cpp selectobjectdialog.cpp initialmessagedialog.cpp)
+SET(app_tool_HEADERS mainwindow.h pointcloudmodifier.h viewerinteractor.h newobjectdialog.h objectsinformation.h selectobjectdialog.h initialmessagedialog.h)
+SET(app_tool_UIS newobjectdialog.ui mainwindow.ui selectobjectdialog.ui initialmessagedialog.ui)
 SET(QtApp_RCCS ./../icons/icons.qrc)
 
 # this will run uic on .ui files:

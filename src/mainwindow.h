@@ -27,6 +27,8 @@ public:
 
     ~MainWindow();
 
+    void showInitialMessage();
+
 // All the slots to interact with the application
 // More details about them in the .cpp file
 private slots:
@@ -147,7 +149,7 @@ private:
     QString _lastDir;
 
     // Some bool variables
-    bool _pcdLoaded, _planeDefined;
+    bool _pcdLoaded, _planeDefined, _showInitialMsg;
     bool _insertingObject, _objectModifed;
     bool _itemSelected, _cloudModified;
 

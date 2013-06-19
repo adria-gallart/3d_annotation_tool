@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "newobjectdialog.h"
 #include "selectobjectdialog.h"
+#include "initialmessagedialog.h"
 
 #include "QMessageBox"
 #include "QFileDialog"
@@ -735,14 +736,9 @@ void MainWindow::init(){
     boost::property_tree::ptree root;
     read_xml(info_doc.toStdString(), root);
 
-    bool showInitial = root.get<bool>("showInitial");
+    _showInitialMsg = root.get<bool>("showInitial");
     _lastDir = QString::fromStdString(root.get<std::string>("lastDirectory"));
     //    _lastDir = root.get<std::string>("lastDirectory");
-
-    if(showInitial){
-        // Missatge al començar la aplicació. que torni false i ha clicat que no vol
-        // tornar a veure el missatge
-    }
 
     // Set the render windowsn setup the interactor and register the callback
     ui->qvtkWidget->SetRenderWindow(viewInteractor.getRenderWindow(ui->qvtkWidget->width(), ui->qvtkWidget->height()));
@@ -1025,6 +1021,15 @@ void MainWindow::confirmObjectPosition(){
     }
 }
 
+void MainWindow::showInitialMessage(){
+    if(_showInitialMsg){
+        initialmessagedialog msg;
+        msg.exec();
+        bool noShowItAgain = msg.getBoolValue();
+        if(noShowItAgain) std::cout << "Don't show again" << std::endl;
+        else std::cout << "Show again" << std::endl;
+    }
+}
 
 // Test function to try new things
 void MainWindow::on_actionTest_triggered(){

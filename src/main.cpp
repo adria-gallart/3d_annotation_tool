@@ -9,6 +9,8 @@ int main(int argc, char *argv[])
 
     // Show the window occupying the whole screen
     w.showMaximized();
+    w.showInitialMessage();
+
 
     return app.exec();
 }
