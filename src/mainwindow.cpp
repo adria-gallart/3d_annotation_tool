@@ -24,10 +24,6 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    _pcdLoaded(false),
-    _planeDefined(false),
-    _insertingObject(false),
-    _objectModifed(false),
     cloud (new pcl::PointCloud<pointT>)
 {
     init();
@@ -75,8 +71,21 @@ void MainWindow::on_actionOpen_triggered(){
 
 // Exit button action
 void MainWindow::on_actionExit_triggered(){
-    if(okToExit()){
-        MainWindow::close();
+    if(_cloudModified){
+        int r = QMessageBox::warning(this, tr("Changes not saved"),
+                                     tr("The point cloud has been changed. Do you want to save the changes?"),
+                                     QMessageBox::Yes , QMessageBox::No);
+        if (r == QMessageBox::Yes) {
+            on_actionSave_PCD_File_triggered();
+            if(!_cloudModified) MainWindow::close();
+        }
+        else
+            MainWindow::close();
+    }
+    else{
+        if(okToExit()){
+            MainWindow::close();
+        }
     }
 }
 
@@ -220,6 +229,7 @@ void MainWindow::on_actionSave_PCD_File_triggered(){
     if(!fileName.isEmpty()){
         pcl::io::savePCDFile(fileName.toStdString(), *cloud);
         _fileName = fileName;
+        _cloudModified = false;
     }
     else{
         QMessageBox::warning(this, "Error", "Pcd file not saved.");
@@ -249,6 +259,7 @@ void MainWindow::on_treeWidget_itemSelectionChanged(){
         viewInteractor.removeBoundingBox();
         std::vector<object> objectList = objectsInfo.getObjectList();
         viewInteractor.highligthAllObjects(cloud, objectList);
+        viewInteractor.render();
         clearPoseInfo();
     }
     // If only one object is selected it is shown with the bounding box
@@ -293,6 +304,7 @@ void MainWindow::on_actionAutomatic_plane_detection_triggered(){
         // Automatic detection of the desk plane and move to the plane x-y
         cloudModifier.automaticTableDetection(cloud, cloud);
         visualize();
+        _cloudModified = true;
 
         // If the automatic detection of the plane is not correct, it can be
         // calculated manually by picking three points.
@@ -315,6 +327,7 @@ void MainWindow::on_actionRotate_z_180_triggered(){
     else{
         cloudModifier.rotate_z_180(cloud, cloud);
         visualize();
+        _cloudModified = true;
     }
 }
 
@@ -336,6 +349,7 @@ void MainWindow::on_actionManual_plane_definition_triggered(){
         cloudModifier.manualTableDetection(cloud, cloud, tablePoints);
         _planeDefined = true;
         visualize();
+        _cloudModified = true;
     }
 }
 
@@ -409,6 +423,7 @@ void MainWindow::on_actionDesk_segmentation_triggered(){
 
 
         visualize();
+        _cloudModified = true;
         _planeDefined=true;
     }
 }
@@ -543,17 +558,22 @@ void MainWindow::on_actionImport_objects_info_triggered(){
 
 // Export the current information about the objects annotated
 void MainWindow::on_actionExport_objects_info_triggered(){
-    // Set the same name of the cloud file but with the extension xml
-    std::string fileName = _fileName.toStdString();
-    fileName.erase(fileName.find_last_of(".")+1, 3);
-    fileName.append("xml");
+    if(objectsInfo.getDeskLength() != -1){
+        // Set the same name of the cloud file but with the extension xml
+        std::string fileName = _fileName.toStdString();
+        fileName.erase(fileName.find_last_of(".")+1, 3);
+        fileName.append("xml");
 
-    QString saveFileName = QFileDialog::getSaveFileName(this, tr("Export objects' information"), QString::fromStdString(fileName), tr("Xml Files(*.xml)"));
-    if(!saveFileName.isEmpty()){
-        objectsInfo.exportObjectsInformation(saveFileName, _fileName);
+        QString saveFileName = QFileDialog::getSaveFileName(this, tr("Export objects' information"), QString::fromStdString(fileName), tr("Xml Files(*.xml)"));
+        if(!saveFileName.isEmpty()){
+            objectsInfo.exportObjectsInformation(saveFileName, _fileName);
+        }
+        else{
+            QMessageBox::warning(this, "Error", "File not saved.");
+        }
     }
-    else{
-        QMessageBox::warning(this, "Error", "File not saved.");
+    else {
+        QMessageBox::warning(this, "Error", "Length and width of the table not defined.");
     }
 }
 
@@ -653,6 +673,13 @@ void MainWindow::on_poseInfo_itemChanged(QTreeWidgetItem *item, int column){
 void MainWindow::init(){
     //Initialization of the UI
     ui->setupUi(this);
+
+    // Start the bool variables
+    _pcdLoaded = false;
+    _planeDefined = false;
+    _insertingObject = false;
+    _objectModifed = false;
+    _cloudModified = false;
 
     //Set to black the background color of the QVTKWidget
     QPalette palette = ui->qvtkWidget->palette();

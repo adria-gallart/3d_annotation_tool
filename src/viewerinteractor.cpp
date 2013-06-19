@@ -136,7 +136,6 @@ void viewerInteractor::highligthAllObjects(pcl::PointCloud<pcl::PointXYZRGB>::Pt
 
         _listClouds.push_back(name.str());
         _viewer->addPointCloud<pcl::PointXYZ> (cloudObject, single_color, _listClouds[i]);
-        render();
     }
 }
 
