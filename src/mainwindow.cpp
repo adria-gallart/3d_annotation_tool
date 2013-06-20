@@ -4,6 +4,7 @@
 #include "selectobjectdialog.h"
 #include "initialmessagedialog.h"
 #include "filtervaluesdialog.h"
+#include "newobjectdialog.h"
 
 #include "QMessageBox"
 #include "QFileDialog"
@@ -289,6 +290,9 @@ void MainWindow::on_treeWidget_itemSelectionChanged(){
                                      tr("You have changed the object without confirm. Do you want to save the changes introduced in the object?"),
                                      QMessageBox::Yes , QMessageBox::No);
         if (r == QMessageBox::Yes) {
+            _boxLength = _ui->boxLength->value()/100;
+            _boxWidth = _ui->boxWidth->value()/100;
+            _boxHeight = _ui->boxHeight->value()/100;
             confirmObjectPosition();
         }
     }
@@ -300,6 +304,7 @@ void MainWindow::on_treeWidget_itemSelectionChanged(){
 
     // If objects is selected, all the objects are shown
     if(text.toStdString() == "Objects"){
+        _ui->treeWidget->currentItem()->setExpanded(true);
         viewInteractor.removeBoundingBox();
         std::vector<object> objectList = objectsInfo.getObjectList();
         viewInteractor.highligthAllObjects(_cloud, objectList);
@@ -336,7 +341,12 @@ void MainWindow::on_treeWidget_itemSelectionChanged(){
         _insertingObject = true;
         _objectModifed = false;
     }
-    else{
+    else if(text.toStdString() == "Table"){
+        _ui->treeWidget->currentItem()->setExpanded(true);
+    }
+
+
+    else {
         // Don't shown any object
         viewInteractor.cleanViewer();
         clearPoseInfo();
@@ -423,6 +433,14 @@ void MainWindow::on_actionDesk_segmentation_triggered(){
         }
     }
     else{
+        // Ask if it will be a desk, floor
+        //        chooseObjectDialog env(0,1);
+        //        env.exec();
+        //        _scenario = env.getObjectName();
+        //        QTreeWidgetItem *itm = new QTreeWidgetItem(_ui->treeWidget);
+        //        itm->setText(0, _scenario);
+        //        _ui->treeWidget->insertTopLevelItem(0,itm);
+
         pointT pointPicked;
         float table_length, table_width;
 
@@ -621,6 +639,14 @@ void MainWindow::on_actionImport_objects_info_triggered(){
 
         // Actualize tree widget with the loaded objects and the table size
         actualizeInformationTreeWidget();
+
+        // Activate the missing actions
+        _ui->actionSave_PCD_File->setEnabled(true);
+        _ui->actionDesk_segmentation->setEnabled(true);
+        _ui->actionInsert_new_object->setEnabled(true);
+        _ui->actionConfirm_position->setEnabled(true);
+        _ui->actionDelete_object->setEnabled(true);
+        _ui->actionExport_objects_info->setEnabled(true);
     }
     else{
         QMessageBox::warning(this, "Error", "File not load.");

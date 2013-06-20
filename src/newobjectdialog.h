@@ -12,7 +12,9 @@ class chooseObjectDialog : public QDialog
     Q_OBJECT
     
 public:
-    explicit chooseObjectDialog(QWidget *parent = 0);
+    // If type = 0, is to insert a new object in the list of objects
+    // If type = 1, is to define if the plane is a desk, floor or whatever
+    explicit chooseObjectDialog(QWidget *parent = 0, int type=0);
     ~chooseObjectDialog();
     QString getObjectName();
     

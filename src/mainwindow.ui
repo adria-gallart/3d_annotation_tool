@@ -276,64 +276,84 @@
               <property name="topMargin">
                <number>0</number>
               </property>
-              <item row="6" column="1">
-               <widget class="QLabel" name="label">
-                <property name="font">
-                 <font>
-                  <pointsize>12</pointsize>
-                 </font>
-                </property>
-                <property name="layoutDirection">
-                 <enum>Qt::LeftToRight</enum>
-                </property>
+              <item row="7" column="2">
+               <widget class="QPushButton" name="buttonYMore">
                 <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; color:#00e100;&quot;&gt;        Y&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="../icons/icons.qrc">
+                  <normaloff>:/icons/plus.png</normaloff>:/icons/plus.png</iconset>
                 </property>
                </widget>
               </item>
-              <item row="4" column="0" colspan="3">
-               <widget class="Line" name="line_2">
-                <property name="frameShadow">
-                 <enum>QFrame::Plain</enum>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="11" column="0" colspan="3">
-               <widget class="Line" name="line_3">
-                <property name="frameShadow">
-                 <enum>QFrame::Plain</enum>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="17" column="0" colspan="3">
-               <widget class="Line" name="line_5">
-                <property name="frameShadow">
-                 <enum>QFrame::Plain</enum>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="19" column="1">
-               <widget class="QLabel" name="label_10">
-                <property name="font">
-                 <font>
-                  <pointsize>12</pointsize>
-                 </font>
-                </property>
+              <item row="3" column="0">
+               <widget class="QPushButton" name="buttonXLess">
                 <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;     Yaw&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="../icons/icons.qrc">
+                  <normaloff>:/icons/less.png</normaloff>:/icons/less.png</iconset>
                 </property>
                </widget>
               </item>
-              <item row="13" column="1">
+              <item row="14" column="2">
+               <widget class="QPushButton" name="buttonRollMore">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="../icons/icons.qrc">
+                  <normaloff>:/icons/plus.png</normaloff>:/icons/plus.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item row="20" column="0">
+               <widget class="QPushButton" name="buttonYawLess">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="../icons/icons.qrc">
+                  <normaloff>:/icons/less.png</normaloff>:/icons/less.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item row="17" column="0">
+               <widget class="QPushButton" name="buttonPitchLess">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="../icons/icons.qrc">
+                  <normaloff>:/icons/less.png</normaloff>:/icons/less.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item row="11" column="2">
+               <widget class="QPushButton" name="buttonZMore">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="../icons/icons.qrc">
+                  <normaloff>:/icons/plus.png</normaloff>:/icons/plus.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item row="7" column="0">
+               <widget class="QPushButton" name="buttonYLess">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="../icons/icons.qrc">
+                  <normaloff>:/icons/less.png</normaloff>:/icons/less.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item row="14" column="1">
                <widget class="QLabel" name="label_9">
                 <property name="font">
                  <font>
@@ -345,256 +365,7 @@
                 </property>
                </widget>
               </item>
-              <item row="8" column="0" colspan="3">
-               <widget class="Line" name="line">
-                <property name="frameShadow">
-                 <enum>QFrame::Plain</enum>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0" colspan="3">
-               <widget class="QTreeWidget" name="poseInfo">
-                <property name="maximumSize">
-                 <size>
-                  <width>16777215</width>
-                  <height>141</height>
-                 </size>
-                </property>
-                <property name="indentation">
-                 <number>0</number>
-                </property>
-                <column>
-                 <property name="text">
-                  <string>Pose</string>
-                 </property>
-                 <property name="textAlignment">
-                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>Value</string>
-                 </property>
-                 <property name="textAlignment">
-                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
-                 </property>
-                </column>
-                <item>
-                 <property name="text">
-                  <string>X (m)</string>
-                 </property>
-                 <property name="textAlignment">
-                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
-                 </property>
-                 <property name="background">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>211</red>
-                    <green>211</green>
-                    <blue>211</blue>
-                   </color>
-                  </brush>
-                 </property>
-                 <property name="text">
-                  <string>0</string>
-                 </property>
-                 <property name="textAlignment">
-                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
-                 </property>
-                 <property name="background">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>211</red>
-                    <green>211</green>
-                    <blue>211</blue>
-                   </color>
-                  </brush>
-                 </property>
-                 <property name="flags">
-                  <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Y (m)</string>
-                 </property>
-                 <property name="textAlignment">
-                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
-                 </property>
-                 <property name="background">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>190</red>
-                    <green>190</green>
-                    <blue>190</blue>
-                   </color>
-                  </brush>
-                 </property>
-                 <property name="text">
-                  <string>0</string>
-                 </property>
-                 <property name="textAlignment">
-                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
-                 </property>
-                 <property name="background">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>190</red>
-                    <green>190</green>
-                    <blue>190</blue>
-                   </color>
-                  </brush>
-                 </property>
-                 <property name="flags">
-                  <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Z (m)</string>
-                 </property>
-                 <property name="textAlignment">
-                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
-                 </property>
-                 <property name="background">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>211</red>
-                    <green>211</green>
-                    <blue>211</blue>
-                   </color>
-                  </brush>
-                 </property>
-                 <property name="text">
-                  <string>0</string>
-                 </property>
-                 <property name="textAlignment">
-                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
-                 </property>
-                 <property name="background">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>211</red>
-                    <green>211</green>
-                    <blue>211</blue>
-                   </color>
-                  </brush>
-                 </property>
-                 <property name="flags">
-                  <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Roll (º)</string>
-                 </property>
-                 <property name="textAlignment">
-                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
-                 </property>
-                 <property name="background">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>190</red>
-                    <green>190</green>
-                    <blue>190</blue>
-                   </color>
-                  </brush>
-                 </property>
-                 <property name="text">
-                  <string>0</string>
-                 </property>
-                 <property name="textAlignment">
-                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
-                 </property>
-                 <property name="background">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>190</red>
-                    <green>190</green>
-                    <blue>190</blue>
-                   </color>
-                  </brush>
-                 </property>
-                 <property name="flags">
-                  <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Pitch (º)</string>
-                 </property>
-                 <property name="textAlignment">
-                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
-                 </property>
-                 <property name="background">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>211</red>
-                    <green>211</green>
-                    <blue>211</blue>
-                   </color>
-                  </brush>
-                 </property>
-                 <property name="text">
-                  <string>0</string>
-                 </property>
-                 <property name="textAlignment">
-                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
-                 </property>
-                 <property name="background">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>211</red>
-                    <green>211</green>
-                    <blue>211</blue>
-                   </color>
-                  </brush>
-                 </property>
-                 <property name="flags">
-                  <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Yaw (º)</string>
-                 </property>
-                 <property name="textAlignment">
-                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
-                 </property>
-                 <property name="background">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>190</red>
-                    <green>190</green>
-                    <blue>190</blue>
-                   </color>
-                  </brush>
-                 </property>
-                 <property name="text">
-                  <string>0</string>
-                 </property>
-                 <property name="textAlignment">
-                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
-                 </property>
-                 <property name="background">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>190</red>
-                    <green>190</green>
-                    <blue>190</blue>
-                   </color>
-                  </brush>
-                 </property>
-                 <property name="flags">
-                  <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item row="16" column="1">
+              <item row="17" column="1">
                <widget class="QLabel" name="label_8">
                 <property name="font">
                  <font>
@@ -606,20 +377,20 @@
                 </property>
                </widget>
               </item>
-              <item row="10" column="1">
-               <widget class="QLabel" name="label_2">
+              <item row="20" column="1">
+               <widget class="QLabel" name="label_10">
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
                  </font>
                 </property>
                 <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; color:#0040c2;&quot;&gt;Z &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;     Yaw&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
-              <item row="14" column="0" colspan="3">
-               <widget class="Line" name="line_4">
+              <item row="9" column="0" colspan="3">
+               <widget class="Line" name="line">
                 <property name="frameShadow">
                  <enum>QFrame::Plain</enum>
                 </property>
@@ -628,7 +399,49 @@
                 </property>
                </widget>
               </item>
-              <item row="2" column="1">
+              <item row="11" column="0">
+               <widget class="QPushButton" name="buttonZLess">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="../icons/icons.qrc">
+                  <normaloff>:/icons/less.png</normaloff>:/icons/less.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item row="21" column="0" colspan="3">
+               <widget class="Line" name="line_7">
+                <property name="frameShadow">
+                 <enum>QFrame::Plain</enum>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0" colspan="3">
+               <widget class="Line" name="line_6">
+                <property name="frameShadow">
+                 <enum>QFrame::Plain</enum>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="20" column="2">
+               <widget class="QPushButton" name="buttonYawMore">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="../icons/icons.qrc">
+                  <normaloff>:/icons/plus.png</normaloff>:/icons/plus.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
                <widget class="QLabel" name="label_11">
                 <property name="palette">
                  <palette>
@@ -1050,61 +863,7 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="0" colspan="3">
-               <widget class="Line" name="line_6">
-                <property name="frameShadow">
-                 <enum>QFrame::Plain</enum>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QPushButton" name="buttonXLess">
-                <property name="text">
-                 <string/>
-                </property>
-                <property name="icon">
-                 <iconset resource="../icons/icons.qrc">
-                  <normaloff>:/icons/less.png</normaloff>:/icons/less.png</iconset>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="2">
-               <widget class="QPushButton" name="buttonXMore">
-                <property name="text">
-                 <string/>
-                </property>
-                <property name="icon">
-                 <iconset resource="../icons/icons.qrc">
-                  <normaloff>:/icons/plus.png</normaloff>:/icons/plus.png</iconset>
-                </property>
-               </widget>
-              </item>
-              <item row="13" column="2">
-               <widget class="QPushButton" name="buttonRollMore">
-                <property name="text">
-                 <string/>
-                </property>
-                <property name="icon">
-                 <iconset resource="../icons/icons.qrc">
-                  <normaloff>:/icons/plus.png</normaloff>:/icons/plus.png</iconset>
-                </property>
-               </widget>
-              </item>
-              <item row="16" column="0">
-               <widget class="QPushButton" name="buttonPitchLess">
-                <property name="text">
-                 <string/>
-                </property>
-                <property name="icon">
-                 <iconset resource="../icons/icons.qrc">
-                  <normaloff>:/icons/less.png</normaloff>:/icons/less.png</iconset>
-                </property>
-               </widget>
-              </item>
-              <item row="16" column="2">
+              <item row="17" column="2">
                <widget class="QPushButton" name="buttonPitchMore">
                 <property name="text">
                  <string/>
@@ -1115,30 +874,257 @@
                 </property>
                </widget>
               </item>
-              <item row="10" column="0">
-               <widget class="QPushButton" name="buttonZLess">
-                <property name="text">
-                 <string/>
+              <item row="0" column="0" colspan="3">
+               <widget class="QTreeWidget" name="poseInfo">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>141</height>
+                 </size>
                 </property>
-                <property name="icon">
-                 <iconset resource="../icons/icons.qrc">
-                  <normaloff>:/icons/less.png</normaloff>:/icons/less.png</iconset>
+                <property name="indentation">
+                 <number>0</number>
+                </property>
+                <column>
+                 <property name="text">
+                  <string>Pose</string>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Value</string>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                 </property>
+                </column>
+                <item>
+                 <property name="text">
+                  <string>X (m)</string>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                 </property>
+                 <property name="background">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="255">
+                    <red>211</red>
+                    <green>211</green>
+                    <blue>211</blue>
+                   </color>
+                  </brush>
+                 </property>
+                 <property name="text">
+                  <string>0</string>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                 </property>
+                 <property name="background">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="255">
+                    <red>211</red>
+                    <green>211</green>
+                    <blue>211</blue>
+                   </color>
+                  </brush>
+                 </property>
+                 <property name="flags">
+                  <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Y (m)</string>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                 </property>
+                 <property name="background">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="255">
+                    <red>190</red>
+                    <green>190</green>
+                    <blue>190</blue>
+                   </color>
+                  </brush>
+                 </property>
+                 <property name="text">
+                  <string>0</string>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                 </property>
+                 <property name="background">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="255">
+                    <red>190</red>
+                    <green>190</green>
+                    <blue>190</blue>
+                   </color>
+                  </brush>
+                 </property>
+                 <property name="flags">
+                  <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Z (m)</string>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                 </property>
+                 <property name="background">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="255">
+                    <red>211</red>
+                    <green>211</green>
+                    <blue>211</blue>
+                   </color>
+                  </brush>
+                 </property>
+                 <property name="text">
+                  <string>0</string>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                 </property>
+                 <property name="background">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="255">
+                    <red>211</red>
+                    <green>211</green>
+                    <blue>211</blue>
+                   </color>
+                  </brush>
+                 </property>
+                 <property name="flags">
+                  <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Roll (º)</string>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                 </property>
+                 <property name="background">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="255">
+                    <red>190</red>
+                    <green>190</green>
+                    <blue>190</blue>
+                   </color>
+                  </brush>
+                 </property>
+                 <property name="text">
+                  <string>0</string>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                 </property>
+                 <property name="background">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="255">
+                    <red>190</red>
+                    <green>190</green>
+                    <blue>190</blue>
+                   </color>
+                  </brush>
+                 </property>
+                 <property name="flags">
+                  <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Pitch (º)</string>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                 </property>
+                 <property name="background">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="255">
+                    <red>211</red>
+                    <green>211</green>
+                    <blue>211</blue>
+                   </color>
+                  </brush>
+                 </property>
+                 <property name="text">
+                  <string>0</string>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                 </property>
+                 <property name="background">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="255">
+                    <red>211</red>
+                    <green>211</green>
+                    <blue>211</blue>
+                   </color>
+                  </brush>
+                 </property>
+                 <property name="flags">
+                  <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Yaw (º)</string>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                 </property>
+                 <property name="background">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="255">
+                    <red>190</red>
+                    <green>190</green>
+                    <blue>190</blue>
+                   </color>
+                  </brush>
+                 </property>
+                 <property name="text">
+                  <string>0</string>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                 </property>
+                 <property name="background">
+                  <brush brushstyle="SolidPattern">
+                   <color alpha="255">
+                    <red>190</red>
+                    <green>190</green>
+                    <blue>190</blue>
+                   </color>
+                  </brush>
+                 </property>
+                 <property name="flags">
+                  <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="12" column="0" colspan="3">
+               <widget class="Line" name="line_3">
+                <property name="frameShadow">
+                 <enum>QFrame::Plain</enum>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
                 </property>
                </widget>
               </item>
-              <item row="6" column="0">
-               <widget class="QPushButton" name="buttonYLess">
-                <property name="text">
-                 <string/>
-                </property>
-                <property name="icon">
-                 <iconset resource="../icons/icons.qrc">
-                  <normaloff>:/icons/less.png</normaloff>:/icons/less.png</iconset>
-                </property>
-               </widget>
-              </item>
-              <item row="6" column="2">
-               <widget class="QPushButton" name="buttonYMore">
+              <item row="3" column="2">
+               <widget class="QPushButton" name="buttonXMore">
                 <property name="text">
                  <string/>
                 </property>
@@ -1148,18 +1134,19 @@
                 </property>
                </widget>
               </item>
-              <item row="10" column="2">
-               <widget class="QPushButton" name="buttonZMore">
-                <property name="text">
-                 <string/>
+              <item row="11" column="1">
+               <widget class="QLabel" name="label_2">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                 </font>
                 </property>
-                <property name="icon">
-                 <iconset resource="../icons/icons.qrc">
-                  <normaloff>:/icons/plus.png</normaloff>:/icons/plus.png</iconset>
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; color:#0040c2;&quot;&gt;Z &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
-              <item row="13" column="0">
+              <item row="14" column="0">
                <widget class="QPushButton" name="buttonRollLess">
                 <property name="text">
                  <string/>
@@ -1170,35 +1157,67 @@
                 </property>
                </widget>
               </item>
-              <item row="19" column="0">
-               <widget class="QPushButton" name="buttonYawLess">
-                <property name="text">
-                 <string/>
-                </property>
-                <property name="icon">
-                 <iconset resource="../icons/icons.qrc">
-                  <normaloff>:/icons/less.png</normaloff>:/icons/less.png</iconset>
-                </property>
-               </widget>
-              </item>
-              <item row="19" column="2">
-               <widget class="QPushButton" name="buttonYawMore">
-                <property name="text">
-                 <string/>
-                </property>
-                <property name="icon">
-                 <iconset resource="../icons/icons.qrc">
-                  <normaloff>:/icons/plus.png</normaloff>:/icons/plus.png</iconset>
-                </property>
-               </widget>
-              </item>
-              <item row="20" column="0" colspan="3">
-               <widget class="Line" name="line_7">
+              <item row="18" column="0" colspan="3">
+               <widget class="Line" name="line_5">
                 <property name="frameShadow">
                  <enum>QFrame::Plain</enum>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="0" colspan="3">
+               <widget class="Line" name="line_2">
+                <property name="frameShadow">
+                 <enum>QFrame::Plain</enum>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="15" column="0" colspan="3">
+               <widget class="Line" name="line_4">
+                <property name="frameShadow">
+                 <enum>QFrame::Plain</enum>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="7" column="1">
+               <widget class="QLabel" name="label">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="layoutDirection">
+                 <enum>Qt::LeftToRight</enum>
+                </property>
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; color:#00e100;&quot;&gt;        Y&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0" colspan="3">
+               <widget class="QLabel" name="label_12">
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::Panel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <property name="text">
+                 <string>Pose Interaction</string>
                 </property>
                </widget>
               </item>
@@ -1256,7 +1275,7 @@
     </property>
     <widget class="QMenu" name="menuPreferences">
      <property name="title">
-      <string>&amp;Preferences</string>
+      <string>Pre&amp;ferences</string>
      </property>
      <addaction name="actionShow_info_messages"/>
     </widget>
@@ -1296,7 +1315,7 @@
     </property>
     <widget class="QMenu" name="menuChange_viewpoint">
      <property name="title">
-      <string>Change viewpoint</string>
+      <string>Perspective</string>
      </property>
      <addaction name="actionUp"/>
      <addaction name="actionFront"/>
@@ -1458,10 +1477,10 @@
      <normaloff>:/icons/Segment.png</normaloff>:/icons/Segment.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Desk segmentation</string>
+    <string>&amp;Plane segmentation</string>
    </property>
    <property name="toolTip">
-    <string>Desk segmentation (Ctrl+D)</string>
+    <string>Plane segmentation (Ctrl+D)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+D</string>
@@ -1603,7 +1622,10 @@
      <normaloff>:/icons/viewAbove.png</normaloff>:/icons/viewAbove.png</iconset>
    </property>
    <property name="text">
-    <string>Up</string>
+    <string>Top view</string>
+   </property>
+   <property name="toolTip">
+    <string>Top view</string>
    </property>
   </action>
   <action name="actionFront">
@@ -1615,7 +1637,10 @@
      <normaloff>:/icons/viewFront.png</normaloff>:/icons/viewFront.png</iconset>
    </property>
    <property name="text">
-    <string>Front</string>
+    <string>Front view</string>
+   </property>
+   <property name="toolTip">
+    <string>Front view</string>
    </property>
   </action>
   <action name="actionLeft">
@@ -1627,7 +1652,10 @@
      <normaloff>:/icons/viewLeft.png</normaloff>:/icons/viewLeft.png</iconset>
    </property>
    <property name="text">
-    <string>Left</string>
+    <string>Left view</string>
+   </property>
+   <property name="toolTip">
+    <string>Left view</string>
    </property>
   </action>
   <action name="actionRight">
@@ -1639,7 +1667,10 @@
      <normaloff>:/icons/viewRight.png</normaloff>:/icons/viewRight.png</iconset>
    </property>
    <property name="text">
-    <string>Right</string>
+    <string>Right view</string>
+   </property>
+   <property name="toolTip">
+    <string>Right view</string>
    </property>
   </action>
   <action name="actionBack">
@@ -1651,7 +1682,10 @@
      <normaloff>:/icons/viewBack.png</normaloff>:/icons/viewBack.png</iconset>
    </property>
    <property name="text">
-    <string>Back</string>
+    <string>Back view</string>
+   </property>
+   <property name="toolTip">
+    <string>Back view</string>
    </property>
   </action>
   <action name="actionShow_info_messages">

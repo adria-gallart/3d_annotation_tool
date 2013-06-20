@@ -155,6 +155,9 @@ private:
     QString _fileName;
     QString _lastDir;
 
+    // Scenario
+    QString _scenario;
+
     // Some bool variables
     bool _pcdLoaded, _planeDefined;
     bool _insertingObject, _objectModifed;

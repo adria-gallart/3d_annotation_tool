@@ -2,12 +2,18 @@
 #include "ui_newobjectdialog.h"
 #include "QMessageBox"
 
-chooseObjectDialog::chooseObjectDialog(QWidget *parent) :
+chooseObjectDialog::chooseObjectDialog(QWidget *parent, int type) :
     QDialog(parent),
     ui(new Ui::chooseObjectDialog)
 {
     ui->setupUi(this);
-    setWindowTitle("New object");
+    if(type == 0){
+        setWindowTitle("New object");
+    }
+    else{
+        setWindowTitle("New object");
+        ui->label->setText("Floor, or desk or....");
+    }
 }
 
 chooseObjectDialog::~chooseObjectDialog(){
