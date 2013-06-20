@@ -52,8 +52,6 @@ private slots:
 
     void on_actionConfirm_position_triggered();
 
-    void on_actionTest_triggered();
-
     void on_actionDelete_object_triggered();
 
     void on_actionExport_objects_info_triggered();
@@ -118,12 +116,21 @@ private slots:
 
     void on_boxHeight_editingFinished();
 
+    void on_actionShow_info_messages_toggled(bool arg1);
+
+    void on_actionUndo_triggered();
+
+    void on_actionDownsample_point_cloud_triggered();
+
 private:
     // The main window used
-    Ui::MainWindow *ui;
+    Ui::MainWindow *_ui;
 
     // Used to store the pointcloud
-    pcl::PointCloud<pointT>::Ptr cloud;
+    pcl::PointCloud<pointT>::Ptr _cloud;
+
+    // Used to store the previous point cloud after some modifications
+    pcl::PointCloud<pointT>::Ptr _cloudUndo;
 
     // The name of the current object to annotate
     QString _objectName;
@@ -149,9 +156,10 @@ private:
     QString _lastDir;
 
     // Some bool variables
-    bool _pcdLoaded, _planeDefined, _showInitialMsg;
+    bool _pcdLoaded, _planeDefined;
     bool _insertingObject, _objectModifed;
     bool _itemSelected, _cloudModified;
+    bool _showInfoMsgs, _showInitialMsg;
 
     /** \brief Function to initialize
       */

@@ -3,6 +3,7 @@
 #include "newobjectdialog.h"
 #include "selectobjectdialog.h"
 #include "initialmessagedialog.h"
+#include "filtervaluesdialog.h"
 
 #include "QMessageBox"
 #include "QFileDialog"
@@ -11,6 +12,7 @@
 #include "QListWidgetItem"
 
 #include <pcl/filters/project_inliers.h>
+#include <pcl/filters/voxel_grid.h>
 #include <pcl/common/transforms.h>
 #include <pcl/common/angles.h>
 
@@ -24,14 +26,15 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    cloud (new pcl::PointCloud<pointT>)
+    _ui(new Ui::MainWindow),
+    _cloud (new pcl::PointCloud<pointT>),
+    _cloudUndo (new pcl::PointCloud<pointT>)
 {
     init();
 }
 
 MainWindow::~MainWindow(){
-    delete ui;
+    delete _ui;
 }
 
 ///////////////////////////////////////////////////////////////
@@ -67,13 +70,27 @@ void MainWindow::on_actionOpen_triggered(){
         root.put("lastDirectory", path);
         boost::property_tree::xml_writer_settings<char> settings(' ', 3);
         write_xml(info_doc.toStdString(), root, std::locale(), settings);
+
+        // Enable some of the functions
+        _ui->actionImport_objects_info->setEnabled(true);
+        _ui->actionManual_plane_definition->setEnabled(true);
+        _ui->actionAutomatic_plane_detection->setEnabled(true);
+        _ui->actionRotate_z_180->setEnabled(true);
+        _ui->actionDownsample_point_cloud->setEnabled(true);
+        _ui->actionCoordinate_system->setEnabled(true);
+        _ui->actionUp->setEnabled(true);
+        _ui->actionFront->setEnabled(true);
+        _ui->actionLeft->setEnabled(true);
+        _ui->actionRight->setEnabled(true);
+        _ui->actionBack->setEnabled(true);
     }
 }
 
 // Exit button action
 void MainWindow::on_actionExit_triggered(){
     if(_cloudModified){
-        int r = QMessageBox::warning(this, tr("Changes not saved"),
+        int r = QMessageBox::warning(this,
+                                     tr("Changes not saved"),
                                      tr("The point cloud has been changed. Do you want to save the changes?"),
                                      QMessageBox::Yes , QMessageBox::No);
         if (r == QMessageBox::Yes) {
@@ -165,19 +182,19 @@ void MainWindow::on_buttonRollLess_clicked(){
 // and height value of the bounding box
 void MainWindow::on_boxWidth_editingFinished(){
     if(_insertingObject){
-        _boxWidth = ui->boxWidth->value()/100;
+        _boxWidth = _ui->boxWidth->value()/100;
         actualizeBoxWidth();
     }
 
     if(!_itemSelected && !_insertingObject){
-        ui->boxWidth->setValue(0);
+        _ui->boxWidth->setValue(0);
     }
 }
 
 void MainWindow::on_boxWidthMore_clicked(){
     if(_insertingObject){
         _boxWidth += 0.01;
-        ui->boxWidth->setValue(_boxWidth*100);
+        _ui->boxWidth->setValue(_boxWidth*100);
         actualizeBoxWidth();
     }
 }
@@ -185,26 +202,26 @@ void MainWindow::on_boxWidthMore_clicked(){
 void MainWindow::on_boxWidthLess_clicked(){
     if(_insertingObject){
         _boxWidth -= 0.01;
-        ui->boxWidth->setValue(_boxWidth*100);
+        _ui->boxWidth->setValue(_boxWidth*100);
         actualizeBoxWidth();
     }
 }
 
 void MainWindow::on_boxLength_editingFinished(){
     if(_insertingObject){
-    _boxLength = ui->boxLength->value()/100;
+    _boxLength = _ui->boxLength->value()/100;
        actualizeBoxLength();
     }
 
     if(!_itemSelected && !_insertingObject){
-        ui->boxLength->setValue(0);
+        _ui->boxLength->setValue(0);
     }
 }
 
 void MainWindow::on_boxLengthMore_clicked(){
     if(_insertingObject){
         _boxLength += 0.01;
-        ui->boxLength->setValue(_boxLength*100);
+        _ui->boxLength->setValue(_boxLength*100);
         actualizeBoxLength();
     }
 }
@@ -212,19 +229,19 @@ void MainWindow::on_boxLengthMore_clicked(){
 void MainWindow::on_boxLengthLess_clicked(){
     if(_insertingObject){
         _boxLength -= 0.01;
-        ui->boxLength->setValue(_boxLength*100);
+        _ui->boxLength->setValue(_boxLength*100);
         actualizeBoxLength();
     }
 }
 
 void MainWindow::on_boxHeight_editingFinished(){
     if(_insertingObject){
-        _boxHeight = ui->boxHeight->value()/100;
+        _boxHeight = _ui->boxHeight->value()/100;
         actualizeBoxHeight();
     }
 
     if(!_itemSelected && !_insertingObject){
-        ui->boxHeight->setValue(0);
+        _ui->boxHeight->setValue(0);
     }
 }
 
@@ -232,7 +249,7 @@ void MainWindow::on_boxHeight_editingFinished(){
 void MainWindow::on_boxHeightMore_clicked(){
      if(_insertingObject){
          _boxHeight += 0.01;
-         ui->boxHeight->setValue(_boxHeight*100);
+         _ui->boxHeight->setValue(_boxHeight*100);
          actualizeBoxHeight();
      }
 }
@@ -240,7 +257,7 @@ void MainWindow::on_boxHeightMore_clicked(){
 void MainWindow::on_boxHeightLess_clicked(){
     if(_insertingObject){
         _boxHeight -= 0.01;
-        ui->boxHeight->setValue(_boxHeight*100);
+        _ui->boxHeight->setValue(_boxHeight*100);
         actualizeBoxHeight();
     }
 }
@@ -252,7 +269,7 @@ void MainWindow::on_actionSave_PCD_File_triggered(){
                                                     _fileName,
                                                     tr("PCD Files(*.pcd)"));
     if(!fileName.isEmpty()){
-        pcl::io::savePCDFile(fileName.toStdString(), *cloud);
+        pcl::io::savePCDFile(fileName.toStdString(), *_cloud);
         _fileName = fileName;
         _cloudModified = false;
     }
@@ -267,7 +284,8 @@ void MainWindow::on_treeWidget_itemSelectionChanged(){
     // If the object has been changed without confirm
     // ask if the user want to lose the changes
     if(_insertingObject && _objectModifed){
-        int r = QMessageBox::warning(this, tr("Changes not confirmed"),
+        int r = QMessageBox::warning(this,
+                                     tr("Changes not confirmed"),
                                      tr("You have changed the object without confirm. Do you want to save the changes introduced in the object?"),
                                      QMessageBox::Yes , QMessageBox::No);
         if (r == QMessageBox::Yes) {
@@ -278,13 +296,13 @@ void MainWindow::on_treeWidget_itemSelectionChanged(){
     _insertingObject = false;
     _itemSelected = false;
 
-    QString text = ui->treeWidget->currentItem()->text(0);
+    QString text = _ui->treeWidget->currentItem()->text(0);
 
     // If objects is selected, all the objects are shown
     if(text.toStdString() == "Objects"){
         viewInteractor.removeBoundingBox();
         std::vector<object> objectList = objectsInfo.getObjectList();
-        viewInteractor.highligthAllObjects(cloud, objectList);
+        viewInteractor.highligthAllObjects(_cloud, objectList);
         viewInteractor.render();
         clearPoseInfo();
     }
@@ -304,9 +322,9 @@ void MainWindow::on_treeWidget_itemSelectionChanged(){
         drawBoxAndPoints();
 
         // Actualize the information displayed
-        ui->boxLength->setValue(boxLength*100);
-        ui->boxWidth->setValue(boxWidth*100);
-        ui->boxHeight->setValue(boxHeight*100);
+        _ui->boxLength->setValue(boxLength*100);
+        _ui->boxWidth->setValue(boxWidth*100);
+        _ui->boxHeight->setValue(boxHeight*100);
         setPoseInfo(pose, roll, pitch, yaw);
 
         // Prepare to be modify while is selected
@@ -329,16 +347,20 @@ void MainWindow::on_treeWidget_itemSelectionChanged(){
 void MainWindow::on_actionAutomatic_plane_detection_triggered(){
     if(_pcdLoaded){
         // Automatic detection of the desk plane and move to the plane x-y
-        cloudModifier.automaticTableDetection(cloud, cloud);
+        cloudModifier.automaticTableDetection(_cloud, _cloud);
         visualize();
         _cloudModified = true;
 
         // If the automatic detection of the plane is not correct, it can be
         // calculated manually by picking three points.
-        QMessageBox::information(this,
-                                 "Correct plane?",
-                                 "If the plane is not correct proceed to do the manual plane detection or apply z rotation.");
+        if(_showInfoMsgs) QMessageBox::information(this,
+                                                   "Correct plane?",
+                                                   "If the plane is not correct proceed to do the manual plane detection or apply z rotation.");
         _planeDefined=true;
+
+        // Activate the action to save the pcd file and segmentate
+        _ui->actionSave_PCD_File->setEnabled(true);
+        _ui->actionDesk_segmentation->setEnabled(true);
     }
     else{
         QMessageBox::warning(this, "Error", "Firstly, you must load a pcd file.");
@@ -352,7 +374,7 @@ void MainWindow::on_actionRotate_z_180_triggered(){
         QMessageBox::warning(this, "Error", "Firstly, you must load a pcd file.");
     }
     else{
-        cloudModifier.rotate_z_180(cloud, cloud);
+        cloudModifier.rotate_z_180(_cloud, _cloud);
         visualize();
         _cloudModified = true;
     }
@@ -369,14 +391,21 @@ void MainWindow::on_actionManual_plane_definition_triggered(){
     }
     else{
         // First pick three points of the table plane
-        QMessageBox::information(this, "Pick points", "Pick three points of the table with shift+left mouse button.");
+        if(_showInfoMsgs) QMessageBox::information(this,
+                                                   "Pick points",
+                                                   "Pick three points of the table with shift+left mouse button.");
+
         viewInteractor.getPointsPicked(3, &tablePoints);
 
         // Manual plane definition of the desk plane and move to the plane x-y
-        cloudModifier.manualTableDetection(cloud, cloud, tablePoints);
+        cloudModifier.manualTableDetection(_cloud, _cloud, tablePoints);
         _planeDefined = true;
         visualize();
         _cloudModified = true;
+
+        // Activate the action to save the pcd file and segmentate
+        _ui->actionSave_PCD_File->setEnabled(true);
+        _ui->actionDesk_segmentation->setEnabled(true);
     }
 }
 
@@ -397,46 +426,49 @@ void MainWindow::on_actionDesk_segmentation_triggered(){
         pointT pointPicked;
         float table_length, table_width;
 
+        // Copy the point cloud if the user want to undo the segmentation
+        pcl::copyPointCloud(*_cloud, *_cloudUndo);
+
         // Segmentate the table given three points picked by the user
 
         // Pick the first point needed: lower left corner
-        QMessageBox::information(this,
-                                 "Pick a point",
-                                 "Pick the lower left corner of the table with shift+left mouse button.");
+        if(_showInfoMsgs) QMessageBox::information(this,
+                                                   "Pick a point",
+                                                   "Pick the lower left corner of the table with shift+left mouse button.");
         viewInteractor.getPointPicked(&pointPicked);
 
         // Move the pointcloud to the lower left corner of the table
-        cloudModifier.translate_on_plane_x_y(cloud, cloud, pointPicked);
+        cloudModifier.translate_on_plane_x_y(_cloud, _cloud, pointPicked);
         visualize();
 
         // Pick the second point needed: lower right corner
-        QMessageBox::information(this,
-                                 "Pick a point",
-                                 "Pick the lower right corner of the table with shift+left mouse button");
+        if(_showInfoMsgs) QMessageBox::information(this,
+                                                   "Pick a point",
+                                                   "Pick the lower right corner of the table with shift+left mouse button");
         viewInteractor.getPointPicked(&pointPicked);
 
         // Align the x axis with the lower edge of the table and calculate the table length
-        cloudModifier.align_x_with_edge(cloud, cloud, pointPicked);
+        cloudModifier.align_x_with_edge(_cloud, _cloud, pointPicked);
         pcl::PointXYZ origin(0,0,0);
         table_length = pcl::euclideanDistance(origin, pointPicked);
         visualize();
 
         // Pick the third point needed: one of the upper edge of the table
-        QMessageBox::information(this,
-                                 "Pick a point",
-                                 "Pick a point on the upper edge of the table with shift+left mouse button");
+        if(_showInfoMsgs) QMessageBox::information(this,
+                                                   "Pick a point",
+                                                   "Pick a point on the upper edge of the table with shift+left mouse button");
         viewInteractor.getPointPicked(&pointPicked);
 
         // Eliminate points below the table
         // Min value of 0 remove points from the table -> set to -0.02
-        cloudModifier.filter_axis(cloud, cloud, "z", -0.02, 5);
+        cloudModifier.filter_axis(_cloud, _cloud, "z", -0.02, 5);
 
         //Eliminate points at right and left side of the table
-        cloudModifier.filter_axis(cloud, cloud, "x", 0, table_length);
+        cloudModifier.filter_axis(_cloud, _cloud, "x", 0, table_length);
 
         //Eliminate points upper and lower side the table
         table_width = pointPicked.y;
-        cloudModifier.filter_axis(cloud, cloud, "y", 0, table_width);
+        cloudModifier.filter_axis(_cloud, _cloud, "y", 0, table_width);
 
         //Pass the table dimensions
         objectsInfo.setDeskDimensions(table_length, table_width);
@@ -447,11 +479,15 @@ void MainWindow::on_actionDesk_segmentation_triggered(){
         //Insert width information in the QtreeWidget
         displayDeskWidthInfo();
 
-
-
         visualize();
         _cloudModified = true;
         _planeDefined=true;
+        _ui->actionUndo->setEnabled(true);
+
+        // Activate the actions to export file and annotate objects
+        _ui->actionExport_objects_info->setEnabled(true);
+        _ui->actionInsert_new_object->setEnabled(true);
+
     }
 }
 
@@ -476,7 +512,7 @@ void MainWindow::on_actionInsert_new_object_triggered(){
                 _insertingObject = true;
 
                 // Select the points for the initial object position
-                QMessageBox::information(this,
+                if(_showInfoMsgs) QMessageBox::information(this,
                                          "Pick a point",
                                          "Pick the next 4 points of the object with shift+left mouse button:\n - Left corner\n - Right corner\n - Upper left corner\n - Highest part ");
                 std::vector<pointT> clickedPoints;
@@ -498,7 +534,9 @@ void MainWindow::on_actionInsert_new_object_triggered(){
                 _boxHeight = clickedPoints[3].z;
 
                 // Calculte the angle between the x axis and the object front edge
-                Eigen::Vector4f line_dir(clickedPoints[1].x - clickedPoints[0].x, clickedPoints[1].y - clickedPoints[0].y, 0, 0);
+                Eigen::Vector4f line_dir(clickedPoints[1].x - clickedPoints[0].x,
+                                         clickedPoints[1].y - clickedPoints[0].y,
+                                         0, 0);
                 Eigen::Vector4f x_axis(1,0,0,0);
                 _boxYaw = pcl::getAngle3D (x_axis, line_dir);
                 if(clickedPoints[1].y < clickedPoints[0].y){
@@ -509,17 +547,18 @@ void MainWindow::on_actionInsert_new_object_triggered(){
                 // New feature
                 _boxRoll = 0;
                 _boxPitch = 0;
-                viewInteractor.defineBoundingBox(_objectPose, _boxRoll, _boxPitch, _boxYaw, _boxLength, _boxWidth, _boxHeight);
+                viewInteractor.defineBoundingBox(_objectPose, _boxRoll, _boxPitch, _boxYaw,
+                                                 _boxLength, _boxWidth, _boxHeight);
                 drawBoxAndPoints();
 
-                std::cout << "Final" << std::endl;
                 // Set the value at the adecuated spin Box
-                ui->boxLength->setValue(_boxLength*100);
-                ui->boxWidth->setValue(_boxWidth*100);
-                ui->boxHeight->setValue(_boxHeight*100);
+                _ui->boxLength->setValue(_boxLength*100);
+                _ui->boxWidth->setValue(_boxWidth*100);
+                _ui->boxHeight->setValue(_boxHeight*100);
 
-                // Actualize pose info
+                // Actualize pose info and activate the action to confirm
                 actualizePoseInfo();
+                _ui->actionConfirm_position->setEnabled(true);
             }
         }
     }
@@ -528,6 +567,7 @@ void MainWindow::on_actionInsert_new_object_triggered(){
 // Confirm object position
 void MainWindow::on_actionConfirm_position_triggered(){
     confirmObjectPosition();
+    _ui->actionDelete_object->setEnabled(true);
 }
 
 // Delete object in the object list
@@ -546,8 +586,8 @@ void MainWindow::on_actionDelete_object_triggered(){
             objectsInfo.deleteObject(objectToDelete);
 
             // Remove it from the tree widget
-            QTreeWidgetItem *child = ui->treeWidget->topLevelItem(1)->takeChild(index);
-            ui->treeWidget->topLevelItem(1)->removeChild(child);
+            QTreeWidgetItem *child = _ui->treeWidget->topLevelItem(1)->takeChild(index);
+            _ui->treeWidget->topLevelItem(1)->removeChild(child);
         }
     }
     else{
@@ -562,7 +602,10 @@ void MainWindow::on_actionImport_objects_info_triggered(){
     fileName.erase(fileName.find_last_of(".")+1, 3);
     fileName.append("xml");
 
-    QString loadFileName = QFileDialog::getOpenFileName(this, tr("Open file"), QString::fromStdString(fileName), tr("Xml Files (*.xml)"));
+    QString loadFileName = QFileDialog::getOpenFileName(this,
+                                                        tr("Open file"),
+                                                        QString::fromStdString(fileName),
+                                                        tr("Xml Files (*.xml)"));
     if(!loadFileName.isEmpty()){
         // Remove all the information saved in the tree widget
         clearInfoTreeWidget();
@@ -592,7 +635,10 @@ void MainWindow::on_actionExport_objects_info_triggered(){
         fileName.erase(fileName.find_last_of(".")+1, 3);
         fileName.append("xml");
 
-        QString saveFileName = QFileDialog::getSaveFileName(this, tr("Export objects' information"), QString::fromStdString(fileName), tr("Xml Files(*.xml)"));
+        QString saveFileName = QFileDialog::getSaveFileName(this,
+                                                            tr("Export objects' information"),
+                                                            QString::fromStdString(fileName),
+                                                            tr("Xml Files(*.xml)"));
         if(!saveFileName.isEmpty()){
             objectsInfo.exportObjectsInformation(saveFileName, _fileName);
         }
@@ -709,7 +755,7 @@ void MainWindow::on_poseInfo_itemChanged(QTreeWidgetItem *item, int column){
 // Initialization
 void MainWindow::init(){
     //Initialization of the UI
-    ui->setupUi(this);
+    _ui->setupUi(this);
 
     // Start the bool variables
     _pcdLoaded = false;
@@ -718,12 +764,13 @@ void MainWindow::init(){
     _objectModifed = false;
     _cloudModified = false;
     _itemSelected = false;
+    _showInfoMsgs = true;
 
     //Set to black the background color of the QVTKWidget
-    QPalette palette = ui->qvtkWidget->palette();
+    QPalette palette = _ui->qvtkWidget->palette();
     palette.setColor(QPalette::Background, QColor("black"));
-    ui->qvtkWidget->setPalette(palette);
-    ui->qvtkWidget->setAutoFillBackground(true);
+    _ui->qvtkWidget->setPalette(palette);
+    _ui->qvtkWidget->setAutoFillBackground(true);
 
     //Windows title
     setWindowTitle("3D annotation tool");
@@ -736,13 +783,13 @@ void MainWindow::init(){
     boost::property_tree::ptree root;
     read_xml(info_doc.toStdString(), root);
 
+
     _showInitialMsg = root.get<bool>("showInitial");
     _lastDir = QString::fromStdString(root.get<std::string>("lastDirectory"));
-    //    _lastDir = root.get<std::string>("lastDirectory");
 
     // Set the render windowsn setup the interactor and register the callback
-    ui->qvtkWidget->SetRenderWindow(viewInteractor.getRenderWindow(ui->qvtkWidget->width(), ui->qvtkWidget->height()));
-    viewInteractor.setupInteractor(ui->qvtkWidget->GetInteractor(), ui->qvtkWidget->GetRenderWindow());
+    _ui->qvtkWidget->SetRenderWindow(viewInteractor.getRenderWindow(_ui->qvtkWidget->width(), _ui->qvtkWidget->height()));
+    viewInteractor.setupInteractor(_ui->qvtkWidget->GetInteractor(), _ui->qvtkWidget->GetRenderWindow());
     viewInteractor.registerCallback();
 }
 
@@ -754,7 +801,7 @@ void MainWindow::visualize(){
         viewInteractor.cleanAll();
     }
     // Visualize the point cloud and set the render windows
-    viewInteractor.visualizePointCloud(cloud);
+    viewInteractor.visualizePointCloud(_cloud);
 }
 
 
@@ -818,11 +865,11 @@ void MainWindow::load_pcd_file(QString fileName){
     _planeDefined = false;
 
     // Read the point cloud
-    reader.read(fileName.toStdString(), *cloud);
+    reader.read(fileName.toStdString(), *_cloud);
 
     // Remove Nan points
     std::vector<int> index;
-    pcl::removeNaNFromPointCloud(*cloud, *cloud, index);
+    pcl::removeNaNFromPointCloud(*_cloud, *_cloud, index);
 
     // Visualize the point cloud loaded
     visualize();
@@ -848,26 +895,26 @@ void MainWindow::setPoseInfo(pcl::PointXYZ boxPose, float boxRoll, float boxPitc
     pitch << setprecision(3) << pcl::rad2deg(boxPitch);
     yaw << setprecision(3) << pcl::rad2deg(boxYaw);
 
-    ui->poseInfo->topLevelItem(0)->setText(1, QString::fromStdString(x.str()));
-    ui->poseInfo->topLevelItem(1)->setText(1, QString::fromStdString(y.str()));
-    ui->poseInfo->topLevelItem(2)->setText(1, QString::fromStdString(z.str()));
-    ui->poseInfo->topLevelItem(3)->setText(1, QString::fromStdString(roll.str()));
-    ui->poseInfo->topLevelItem(4)->setText(1, QString::fromStdString(pitch.str()));
-    ui->poseInfo->topLevelItem(5)->setText(1, QString::fromStdString(yaw.str()));
+    _ui->poseInfo->topLevelItem(0)->setText(1, QString::fromStdString(x.str()));
+    _ui->poseInfo->topLevelItem(1)->setText(1, QString::fromStdString(y.str()));
+    _ui->poseInfo->topLevelItem(2)->setText(1, QString::fromStdString(z.str()));
+    _ui->poseInfo->topLevelItem(3)->setText(1, QString::fromStdString(roll.str()));
+    _ui->poseInfo->topLevelItem(4)->setText(1, QString::fromStdString(pitch.str()));
+    _ui->poseInfo->topLevelItem(5)->setText(1, QString::fromStdString(yaw.str()));
 }
 
 // Clears the information displayed in the pose info tree widget
 void MainWindow::clearPoseInfo(){
-    ui->poseInfo->topLevelItem(0)->setText(1, "0");
-    ui->poseInfo->topLevelItem(1)->setText(1, "0");
-    ui->poseInfo->topLevelItem(2)->setText(1, "0");
-    ui->poseInfo->topLevelItem(3)->setText(1, "0");
-    ui->poseInfo->topLevelItem(4)->setText(1, "0");
-    ui->poseInfo->topLevelItem(5)->setText(1, "0");
+    _ui->poseInfo->topLevelItem(0)->setText(1, "0");
+    _ui->poseInfo->topLevelItem(1)->setText(1, "0");
+    _ui->poseInfo->topLevelItem(2)->setText(1, "0");
+    _ui->poseInfo->topLevelItem(3)->setText(1, "0");
+    _ui->poseInfo->topLevelItem(4)->setText(1, "0");
+    _ui->poseInfo->topLevelItem(5)->setText(1, "0");
 
-    ui->boxLength->setValue(0);
-    ui->boxWidth->setValue(0);
-    ui->boxHeight->setValue(0);
+    _ui->boxLength->setValue(0);
+    _ui->boxWidth->setValue(0);
+    _ui->boxHeight->setValue(0);
 }
 
 // Actualizes the pose values of the pose info tree widget
@@ -881,12 +928,12 @@ void MainWindow::actualizePoseInfo(){
     pitch << setprecision(3) << pcl::rad2deg(_boxPitch);
     yaw << setprecision(3) << pcl::rad2deg(_boxYaw);
 
-    ui->poseInfo->topLevelItem(0)->setText(1, QString::fromStdString(x.str()));
-    ui->poseInfo->topLevelItem(1)->setText(1, QString::fromStdString(y.str()));
-    ui->poseInfo->topLevelItem(2)->setText(1, QString::fromStdString(z.str()));
-    ui->poseInfo->topLevelItem(3)->setText(1, QString::fromStdString(roll.str()));
-    ui->poseInfo->topLevelItem(4)->setText(1, QString::fromStdString(pitch.str()));
-    ui->poseInfo->topLevelItem(5)->setText(1, QString::fromStdString(yaw.str()));
+    _ui->poseInfo->topLevelItem(0)->setText(1, QString::fromStdString(x.str()));
+    _ui->poseInfo->topLevelItem(1)->setText(1, QString::fromStdString(y.str()));
+    _ui->poseInfo->topLevelItem(2)->setText(1, QString::fromStdString(z.str()));
+    _ui->poseInfo->topLevelItem(3)->setText(1, QString::fromStdString(roll.str()));
+    _ui->poseInfo->topLevelItem(4)->setText(1, QString::fromStdString(pitch.str()));
+    _ui->poseInfo->topLevelItem(5)->setText(1, QString::fromStdString(yaw.str()));
 }
 
 void MainWindow::actualizePose(){
@@ -921,7 +968,7 @@ void MainWindow::actualizeBoxHeight(){
 
 void MainWindow::drawBoxAndPoints(){
     viewInteractor.drawBoundingBox();
-    viewInteractor.highligthPointsinBox(cloud);
+    viewInteractor.highligthPointsinBox(_cloud);
 }
 
 void MainWindow::actualizeInformationTreeWidget(){
@@ -937,39 +984,39 @@ void MainWindow::actualizeInformationTreeWidget(){
 }
 
 void MainWindow::displayDeskLengthInfo(){
-    QTreeWidgetItem *itm = new QTreeWidgetItem(ui->treeWidget->topLevelItem(0));
+    QTreeWidgetItem *itm = new QTreeWidgetItem(_ui->treeWidget->topLevelItem(0));
     std::stringstream info;
     info << "Length: " << setprecision(3) << objectsInfo.getDeskLength() << " m";
     itm->setText(0,QString::fromStdString(info.str()));
-    ui->treeWidget->insertTopLevelItem(0,itm);
+    _ui->treeWidget->insertTopLevelItem(0,itm);
 }
 
 void MainWindow::displayDeskWidthInfo(){
-    QTreeWidgetItem *itm = new QTreeWidgetItem(ui->treeWidget->topLevelItem(0));
+    QTreeWidgetItem *itm = new QTreeWidgetItem(_ui->treeWidget->topLevelItem(0));
     std::stringstream info;
     info << "Width: " << setprecision(3) << objectsInfo.getDeskWidth() << " m";
     itm->setText(0,QString::fromStdString(info.str()));
-    ui->treeWidget->insertTopLevelItem(0,itm);
+    _ui->treeWidget->insertTopLevelItem(0,itm);
 }
 
 void MainWindow::displayObjectsInfo(){
     for(int i = 0; i < objectsInfo.numberOfObjects(); i++){
-        QTreeWidgetItem *itm = new QTreeWidgetItem(ui->treeWidget->topLevelItem(1));
+        QTreeWidgetItem *itm = new QTreeWidgetItem(_ui->treeWidget->topLevelItem(1));
         itm->setText(0,objectsInfo.nameOfObject(i));
-        ui->treeWidget->addTopLevelItem(itm);
+        _ui->treeWidget->addTopLevelItem(itm);
     }
 }
 
 void MainWindow::clearInfoTreeWidget(){
     // Remove all the information saved of the tree widget
-    while(ui->treeWidget->topLevelItem(0)->childCount() != 0){
-        QTreeWidgetItem *child = ui->treeWidget->topLevelItem(0)->takeChild(0);
-        ui->treeWidget->topLevelItem(0)->removeChild(child);
+    while(_ui->treeWidget->topLevelItem(0)->childCount() != 0){
+        QTreeWidgetItem *child = _ui->treeWidget->topLevelItem(0)->takeChild(0);
+        _ui->treeWidget->topLevelItem(0)->removeChild(child);
     }
 
-    while(ui->treeWidget->topLevelItem(1)->childCount() != 0){
-        QTreeWidgetItem *child = ui->treeWidget->topLevelItem(1)->takeChild(0);
-        ui->treeWidget->topLevelItem(1)->removeChild(child);
+    while(_ui->treeWidget->topLevelItem(1)->childCount() != 0){
+        QTreeWidgetItem *child = _ui->treeWidget->topLevelItem(1)->takeChild(0);
+        _ui->treeWidget->topLevelItem(1)->removeChild(child);
     }
 }
 
@@ -980,7 +1027,7 @@ void MainWindow::confirmObjectPosition(){
     if(!_objectName.isEmpty()){
         // Get the indices inside the current bounding box
         pcl::PointIndices indices;
-        viewInteractor.getPointsInBoundingBox(cloud, &indices);
+        viewInteractor.getPointsInBoundingBox(_cloud, &indices);
 
 
         if(objectsInfo.existsObject(_objectName)){
@@ -1008,9 +1055,9 @@ void MainWindow::confirmObjectPosition(){
                                      &indices);
 
             // Insert the object in the Information tree Widget
-            QTreeWidgetItem *itm = new QTreeWidgetItem(ui->treeWidget->topLevelItem(1));
+            QTreeWidgetItem *itm = new QTreeWidgetItem(_ui->treeWidget->topLevelItem(1));
             itm->setText(0,QString::fromStdString(_objectName.toStdString()));
-            ui->treeWidget->addTopLevelItem(itm);
+            _ui->treeWidget->addTopLevelItem(itm);
         }
 
         // Clear the pose information displayed
@@ -1025,64 +1072,59 @@ void MainWindow::showInitialMessage(){
     if(_showInitialMsg){
         initialmessagedialog msg;
         msg.exec();
-        bool noShowItAgain = msg.getBoolValue();
-        if(noShowItAgain) std::cout << "Don't show again" << std::endl;
-        else std::cout << "Show again" << std::endl;
+        if(msg.getBoolValue()){
+            // Write false in the output file
+            QString info_doc = qApp->applicationDirPath();
+            info_doc.remove("bin");
+            info_doc.append("info_app.xml");;
+
+            boost::property_tree::ptree root;
+
+            root.put("showInitial", false);
+            root.put("lastDirectory", _lastDir.toStdString());
+
+            boost::property_tree::xml_writer_settings<char> settings(' ', 3);
+            write_xml(info_doc.toStdString(), root, std::locale(), settings);
+        }
     }
 }
 
-// Test function to try new things
-void MainWindow::on_actionTest_triggered(){
-
-
-    //    boost::property_tree::ptree root;
-
-    //    root.put("showInitial", true);
-    //    root.put("lastDirectory", "/home/adria2/icons/");
-
-    //    boost::property_tree::xml_writer_settings<char> settings(' ', 3);
-    //    write_xml("/home/adria2/svn/trunk/annotation_tool/info_app.xml", root, std::locale(), settings);
 
 
 
-    //    /0.392539,0.194869,3.03265/-0.0201028,0.996658,0.0791725/
-
-    //    boost::property_tree::ptree root;
-    //    root.add("showInitial", true);
-    //    //Write
-    //    QString info_doc = qApp->applicationDirPath();
-    //    info_doc.remove("bin");
-    //    info_doc.append("info_app.xml");
-
-    //    boost::property_tree::xml_writer_settings<char> settings(' ', 3);
-    //    write_xml(info_doc.toStdString(), root, std::locale(), settings);
-
-
-    //    QString info_doc = qApp->applicationDirPath();
-    //    info_doc.remove("bin");
-    //    info_doc.append("info_app.xml");;
-    //    boost::property_tree::ptree root;
-    //    read_xml(info_doc.toStdString(), root);
-
-    //    bool showInitialMessage = root.get<bool>("showInitial");
-
-    //    if(showInitialMessage){
-    //        root.clear();
-    //        root.add("showInitial", false);
-    //        //Write
-    //        QString info_doc = qApp->applicationDirPath();
-    //        info_doc.remove("bin");
-    //        info_doc.append("info_app.xml");
-
-    //        boost::property_tree::xml_writer_settings<char> settings(' ', 3);
-    //        write_xml(info_doc.toStdString(), root, std::locale(), settings);
-
-    //    }
-
-    //    std::cout << "Show initial: " << showInitialMessage << std::endl;
-
+void MainWindow::on_actionShow_info_messages_toggled(bool arg1)
+{
+    if(arg1)
+        _showInfoMsgs = true;
+    else
+        _showInfoMsgs = false;
 }
 
+void MainWindow::on_actionUndo_triggered()
+{
+    pcl::copyPointCloud(*_cloudUndo, *_cloud);
+    visualize();
+    _ui->actionUndo->setEnabled(false);
+}
 
+void MainWindow::on_actionDownsample_point_cloud_triggered()
+{
+    // Call the dialog to introduce the filter values
+    filtervaluesdialog filterDialog;
+    filterDialog.exec();
+    float leaf = filterDialog.getLeafSize();
 
+    // Copy the filter to Undo function
+    pcl::copyPointCloud(*_cloud, *_cloudUndo);
 
+    // Create the filtering object
+    pcl::VoxelGrid<pointT> sor;
+    sor.setInputCloud (_cloud);
+    sor.setLeafSize(leaf, leaf, leaf);
+    //    sor.setLeafSize (0.01f, 0.01f, 0.01f);
+    sor.filter (*_cloud);
+    visualize();
+
+    // Enable Undo function
+    _ui->actionUndo->setEnabled(true);
+}

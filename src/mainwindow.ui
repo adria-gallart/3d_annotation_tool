@@ -1254,6 +1254,14 @@
     <property name="title">
      <string>&amp;Edit</string>
     </property>
+    <widget class="QMenu" name="menuPreferences">
+     <property name="title">
+      <string>&amp;Preferences</string>
+     </property>
+     <addaction name="actionShow_info_messages"/>
+    </widget>
+    <addaction name="actionUndo"/>
+    <addaction name="separator"/>
     <addaction name="actionAutomatic_plane_detection"/>
     <addaction name="actionManual_plane_definition"/>
     <addaction name="separator"/>
@@ -1261,12 +1269,8 @@
     <addaction name="actionDesk_segmentation"/>
     <addaction name="separator"/>
     <addaction name="actionDownsample_point_cloud"/>
-   </widget>
-   <widget class="QMenu" name="menuTest_2">
-    <property name="title">
-     <string>test</string>
-    </property>
-    <addaction name="actionTest"/>
+    <addaction name="separator"/>
+    <addaction name="menuPreferences"/>
    </widget>
    <widget class="QMenu" name="menuFile">
     <property name="title">
@@ -1308,7 +1312,6 @@
    <addaction name="menu_Display"/>
    <addaction name="menuObjects"/>
    <addaction name="menu_Help"/>
-   <addaction name="menuTest_2"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -1375,6 +1378,9 @@
    </property>
   </action>
   <action name="actionSave_PCD_File">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
      <normaloff>:/icons/Actions-document-save-all-icon.png</normaloff>:/icons/Actions-document-save-all-icon.png</iconset>
@@ -1390,6 +1396,9 @@
    </property>
   </action>
   <action name="actionAutomatic_plane_detection">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
      <normaloff>:/icons/desk.png</normaloff>:/icons/desk.png</iconset>
@@ -1405,6 +1414,9 @@
    </property>
   </action>
   <action name="actionManual_plane_definition">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
      <normaloff>:/icons/pointPicking.png</normaloff>:/icons/pointPicking.png</iconset>
@@ -1420,6 +1432,9 @@
    </property>
   </action>
   <action name="actionRotate_z_180">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
      <normaloff>:/icons/rotate.png</normaloff>:/icons/rotate.png</iconset>
@@ -1435,6 +1450,9 @@
    </property>
   </action>
   <action name="actionDesk_segmentation">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
      <normaloff>:/icons/Segment.png</normaloff>:/icons/Segment.png</iconset>
@@ -1450,6 +1468,9 @@
    </property>
   </action>
   <action name="actionInsert_new_object">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
      <normaloff>:/icons/pencil.png</normaloff>:/icons/pencil.png</iconset>
@@ -1465,6 +1486,9 @@
    </property>
   </action>
   <action name="actionConfirm_position">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
      <normaloff>:/icons/confirm.gif</normaloff>:/icons/confirm.gif</iconset>
@@ -1479,12 +1503,10 @@
     <string>Ctrl+C</string>
    </property>
   </action>
-  <action name="actionTest">
-   <property name="text">
-    <string>test</string>
-   </property>
-  </action>
   <action name="actionExport_objects_info">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
      <normaloff>:/icons/export.png</normaloff>:/icons/export.png</iconset>
@@ -1500,6 +1522,9 @@
    </property>
   </action>
   <action name="actionImport_objects_info">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
      <normaloff>:/icons/import.png</normaloff>:/icons/import.png</iconset>
@@ -1515,6 +1540,9 @@
    </property>
   </action>
   <action name="actionDelete_object">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
      <normaloff>:/icons/delete.png</normaloff>:/icons/delete.png</iconset>
@@ -1538,6 +1566,9 @@
    <property name="checked">
     <bool>true</bool>
    </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
      <normaloff>:/icons/coordinate_system.png</normaloff>:/icons/coordinate_system.png</iconset>
@@ -1552,6 +1583,9 @@
    </property>
   </action>
   <action name="actionDownsample_point_cloud">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
      <normaloff>:/icons/downsample.png</normaloff>:/icons/downsample.png</iconset>
@@ -1561,6 +1595,9 @@
    </property>
   </action>
   <action name="actionUp">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
      <normaloff>:/icons/viewAbove.png</normaloff>:/icons/viewAbove.png</iconset>
@@ -1570,6 +1607,9 @@
    </property>
   </action>
   <action name="actionFront">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
      <normaloff>:/icons/viewFront.png</normaloff>:/icons/viewFront.png</iconset>
@@ -1579,6 +1619,9 @@
    </property>
   </action>
   <action name="actionLeft">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
      <normaloff>:/icons/viewLeft.png</normaloff>:/icons/viewLeft.png</iconset>
@@ -1588,6 +1631,9 @@
    </property>
   </action>
   <action name="actionRight">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
      <normaloff>:/icons/viewRight.png</normaloff>:/icons/viewRight.png</iconset>
@@ -1597,12 +1643,37 @@
    </property>
   </action>
   <action name="actionBack">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
      <normaloff>:/icons/viewBack.png</normaloff>:/icons/viewBack.png</iconset>
    </property>
    <property name="text">
     <string>Back</string>
+   </property>
+  </action>
+  <action name="actionShow_info_messages">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show info messages</string>
+   </property>
+  </action>
+  <action name="actionUndo">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Undo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
    </property>
   </action>
  </widget>

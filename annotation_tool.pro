@@ -17,7 +17,8 @@ SOURCES += src/main.cpp\
     src/newobjectdialog.cpp \
     src/objectsinformation.cpp \
     src/selectobjectdialog.cpp \
-    src/initialmessagedialog.cpp
+    src/initialmessagedialog.cpp \
+    src/filtervaluesdialog.cpp
 
 
 HEADERS  += src/mainwindow.h \
@@ -26,13 +27,15 @@ HEADERS  += src/mainwindow.h \
     src/newobjectdialog.h \
     src/objectsinformation.h \
     src/selectobjectdialog.h \
-    src/initialmessagedialog.h
+    src/initialmessagedialog.h \
+    src/filtervaluesdialog.h
 
 
 FORMS    += src/mainwindow.ui \
     src/newobjectdialog.ui \
     src/selectobjectdialog.ui \
-    src/initialmessagedialog.ui
+    src/initialmessagedialog.ui \
+    src/filtervaluesdialog.ui
 
 INCLUDEPATH +=  "/opt/ros/fuerte/include/pcl-1.5" \
 		"/usr/local/include/opencv" \
