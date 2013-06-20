@@ -434,12 +434,16 @@ void MainWindow::on_actionDesk_segmentation_triggered(){
     }
     else{
         // Ask if it will be a desk, floor
-        //        chooseObjectDialog env(0,1);
-        //        env.exec();
-        //        _scenario = env.getObjectName();
-        //        QTreeWidgetItem *itm = new QTreeWidgetItem(_ui->treeWidget);
-        //        itm->setText(0, _scenario);
-        //        _ui->treeWidget->insertTopLevelItem(0,itm);
+        chooseObjectDialog env(0,1);
+        env.exec();
+        _scenario = env.getObjectName();
+        QTreeWidgetItem *itm_scenario = new QTreeWidgetItem(_ui->treeWidget);
+        itm_scenario->setText(0, _scenario);
+        _ui->treeWidget->insertTopLevelItem(0,itm_scenario);
+
+        QTreeWidgetItem *itm_objects = new QTreeWidgetItem(_ui->treeWidget);
+        itm_objects->setText(0, QString::fromStdString("Objects"));
+        _ui->treeWidget->insertTopLevelItem(0,itm_objects);
 
         pointT pointPicked;
         float table_length, table_width;
