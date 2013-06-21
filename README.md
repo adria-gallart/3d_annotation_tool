@@ -1,13 +1,12 @@
 3d_annotation_tool
 ==================
-:author: Adrià Gallart del Burgo
-:e-mail: adriagallart@gmail.com 
+Author: Adrià Gallart del Burgo
+e-mail: adriagallart@gmail.com 
 
 3D Annotation Tool is an application designed to annotate objects in a point
 cloud scene. Initially, it was developed with the aim to annotate the objects of
 a table.
 
-================================
 CONTENTS
 ================================
 
@@ -22,7 +21,6 @@ CONTENTS
  - info_objects.xml: .xml file with the list of objects annotated by the user.
  
 
-================================
 SYSTEM REQUIREMENTS
 ================================
 Two options are available to install the prerequisites for the 3D Annotation
@@ -42,7 +40,6 @@ has to be installed. The following is required:
 	2. VTK-QT library:
 		sudo apt-get install libvtk5.8-qt
 
-================================
 INSTALLATION
 ================================
 
@@ -58,7 +55,6 @@ To install the annotation tool:
 
 5. make
 
-================================
 USE
 ================================
 
