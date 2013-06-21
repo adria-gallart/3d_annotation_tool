@@ -9,10 +9,11 @@ chooseObjectDialog::chooseObjectDialog(QWidget *parent, int type) :
     ui->setupUi(this);
     if(type == 0){
         setWindowTitle("New object");
+        ui->label->setText("Insert new object: ");
     }
     else{
-        setWindowTitle("New object");
-        ui->label->setText("Floor, or desk or....");
+        setWindowTitle("Insert scenario");
+        //ui->label->setText("Insert the dominant plane (desk, floor...)");
     }
 }
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>377</width>
-    <height>110</height>
+    <width>561</width>
+    <height>78</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,12 +19,25 @@
      <item>
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>Object name: </string>
+        <string>Insert the dominant plane (desk, floor, etc.): </string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit"/>
+      <widget class="QLineEdit" name="lineEdit">
+       <property name="minimumSize">
+        <size>
+         <width>150</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>150</width>
+         <height>16777215</height>
+        </size>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="insert">

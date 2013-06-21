@@ -9,7 +9,7 @@
 
 using namespace boost::property_tree;
 
-static const std::string TAG_DESK = "desk";
+static const std::string TAG_SCENARIO = "scenario";
 static const std::string TAG_NAME = "name";
 static const std::string TAG_OBJECT = "object";
 static const std::string TAG_NOBJECTS = "numberOfObjects";
@@ -107,10 +107,11 @@ QString objectsInformation::nameOfObject(int index){
     return _objectList[index].name;
 }
 
-void objectsInformation::exportObjectsInformation(QString xmlFile, QString pcdFile ){
+void objectsInformation::exportObjectsInformation(QString xmlFile, QString pcdFile, QString scenario ){
     ptree root;
 
-    ptree& node = root.add(TAG_DESK, "");
+    ptree& node = root.add("scenario", "");
+    node.add("type", scenario.toStdString());
     node.add("annotatedFrom", pcdFile.toStdString());
     ptree* data = &node.add(TAG_DIMENSIONS, "");
     data->put(TAG_LENGTH, _tableLength);
@@ -158,21 +159,23 @@ void objectsInformation::addBoundingBox(ptree &node, int index){
 }
 
 
-void objectsInformation::importObjectsInformation(QString xmlFile){
+QString objectsInformation::importObjectsInformation(QString xmlFile){
     ptree root;
     read_xml(xmlFile.toStdString(), root);
-    //std::string fileFrom = root.get<std::string>(TAG_DESK + "." + "annotatedFrom");
-    ptree& tableDimensions = root.get_child(TAG_DESK + "." + TAG_DIMENSIONS);
+    QString scenarioType = QString::fromStdString(root.get<std::string>(TAG_SCENARIO + "." + "type"));
+    ptree& tableDimensions = root.get_child(TAG_SCENARIO + "." + TAG_DIMENSIONS);
     _tableLength = tableDimensions.get<float>(TAG_LENGTH);
     _tableWidth = tableDimensions.get<float>(TAG_WIDTH);
 
-    ptree& allObjects = root.get_child(TAG_DESK + "." + TAG_ALLOBJECTS);
+    ptree& allObjects = root.get_child(TAG_SCENARIO + "." + TAG_ALLOBJECTS);
 
     ptree::iterator it = allObjects.begin();
     it++;
     for(; it != allObjects.end(); it++){
         parseObject(it->second);
     }
+
+    return scenarioType;
 }
 
 bool objectsInformation::existsObject(QString objectName){

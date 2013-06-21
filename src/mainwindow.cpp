@@ -71,19 +71,6 @@ void MainWindow::on_actionOpen_triggered(){
         root.put("lastDirectory", path);
         boost::property_tree::xml_writer_settings<char> settings(' ', 3);
         write_xml(info_doc.toStdString(), root, std::locale(), settings);
-
-        // Enable some of the functions
-        _ui->actionImport_objects_info->setEnabled(true);
-        _ui->actionManual_plane_definition->setEnabled(true);
-        _ui->actionAutomatic_plane_detection->setEnabled(true);
-        _ui->actionRotate_z_180->setEnabled(true);
-        _ui->actionDownsample_point_cloud->setEnabled(true);
-        _ui->actionCoordinate_system->setEnabled(true);
-        _ui->actionUp->setEnabled(true);
-        _ui->actionFront->setEnabled(true);
-        _ui->actionLeft->setEnabled(true);
-        _ui->actionRight->setEnabled(true);
-        _ui->actionBack->setEnabled(true);
     }
 }
 
@@ -341,7 +328,7 @@ void MainWindow::on_treeWidget_itemSelectionChanged(){
         _insertingObject = true;
         _objectModifed = false;
     }
-    else if(text.toStdString() == "Table"){
+    else if(text.toStdString() == _scenario.toStdString()){
         _ui->treeWidget->currentItem()->setExpanded(true);
     }
 
@@ -367,10 +354,6 @@ void MainWindow::on_actionAutomatic_plane_detection_triggered(){
                                                    "Correct plane?",
                                                    "If the plane is not correct proceed to do the manual plane detection or apply z rotation.");
         _planeDefined=true;
-
-        // Activate the action to save the pcd file and segmentate
-        _ui->actionSave_PCD_File->setEnabled(true);
-        _ui->actionDesk_segmentation->setEnabled(true);
     }
     else{
         QMessageBox::warning(this, "Error", "Firstly, you must load a pcd file.");
@@ -412,10 +395,6 @@ void MainWindow::on_actionManual_plane_definition_triggered(){
         _planeDefined = true;
         visualize();
         _cloudModified = true;
-
-        // Activate the action to save the pcd file and segmentate
-        _ui->actionSave_PCD_File->setEnabled(true);
-        _ui->actionDesk_segmentation->setEnabled(true);
     }
 }
 
@@ -441,6 +420,7 @@ void MainWindow::on_actionDesk_segmentation_triggered(){
         itm_scenario->setText(0, _scenario);
         _ui->treeWidget->insertTopLevelItem(0,itm_scenario);
 
+        // Insert the objects items
         QTreeWidgetItem *itm_objects = new QTreeWidgetItem(_ui->treeWidget);
         itm_objects->setText(0, QString::fromStdString("Objects"));
         _ui->treeWidget->insertTopLevelItem(0,itm_objects);
@@ -506,10 +486,10 @@ void MainWindow::on_actionDesk_segmentation_triggered(){
         _planeDefined=true;
         _ui->actionUndo->setEnabled(true);
 
-        // Activate the actions to export file and annotate objects
-        _ui->actionExport_objects_info->setEnabled(true);
-        _ui->actionInsert_new_object->setEnabled(true);
-
+        // Remind to save it
+        if(_showInfoMsgs) QMessageBox::information(this,
+                                                   "Save the point cloud",
+                                                   "It is recommended to save now the point cloud.");
     }
 }
 
@@ -578,10 +558,9 @@ void MainWindow::on_actionInsert_new_object_triggered(){
                 _ui->boxWidth->setValue(_boxWidth*100);
                 _ui->boxHeight->setValue(_boxHeight*100);
 
-                // Actualize pose info and activate the action to confirm
+                // Actualize pose info
                 actualizePoseInfo();
-                _ui->actionConfirm_position->setEnabled(true);
-            }
+             }
         }
     }
 }
@@ -589,7 +568,6 @@ void MainWindow::on_actionInsert_new_object_triggered(){
 // Confirm object position
 void MainWindow::on_actionConfirm_position_triggered(){
     confirmObjectPosition();
-    _ui->actionDelete_object->setEnabled(true);
 }
 
 // Delete object in the object list
@@ -639,18 +617,20 @@ void MainWindow::on_actionImport_objects_info_triggered(){
         viewInteractor.cleanViewer();
 
         // Import the information
-        objectsInfo.importObjectsInformation(loadFileName);
+        _scenario = objectsInfo.importObjectsInformation(loadFileName);
+
+        // Insert the items in the tree widget
+        QTreeWidgetItem *itm_scenario = new QTreeWidgetItem(_ui->treeWidget);
+        itm_scenario->setText(0, _scenario);
+        _ui->treeWidget->insertTopLevelItem(0,itm_scenario);
+
+        // Insert the objects items
+        QTreeWidgetItem *itm_objects = new QTreeWidgetItem(_ui->treeWidget);
+        itm_objects->setText(0, QString::fromStdString("Objects"));
+        _ui->treeWidget->insertTopLevelItem(0,itm_objects);
 
         // Actualize tree widget with the loaded objects and the table size
         actualizeInformationTreeWidget();
-
-        // Activate the missing actions
-        _ui->actionSave_PCD_File->setEnabled(true);
-        _ui->actionDesk_segmentation->setEnabled(true);
-        _ui->actionInsert_new_object->setEnabled(true);
-        _ui->actionConfirm_position->setEnabled(true);
-        _ui->actionDelete_object->setEnabled(true);
-        _ui->actionExport_objects_info->setEnabled(true);
     }
     else{
         QMessageBox::warning(this, "Error", "File not load.");
@@ -670,7 +650,7 @@ void MainWindow::on_actionExport_objects_info_triggered(){
                                                             QString::fromStdString(fileName),
                                                             tr("Xml Files(*.xml)"));
         if(!saveFileName.isEmpty()){
-            objectsInfo.exportObjectsInformation(saveFileName, _fileName);
+            objectsInfo.exportObjectsInformation(saveFileName, _fileName, _scenario);
         }
         else{
             QMessageBox::warning(this, "Error", "File not saved.");
@@ -804,6 +784,9 @@ void MainWindow::init(){
 
     //Windows title
     setWindowTitle("3D annotation tool");
+
+    // Clear tree widget
+    _ui->treeWidget->clear();
 
     // Read the information left for the user in the previous session
     QString info_doc = qApp->applicationDirPath();
@@ -1039,15 +1022,16 @@ void MainWindow::displayObjectsInfo(){
 
 void MainWindow::clearInfoTreeWidget(){
     // Remove all the information saved of the tree widget
-    while(_ui->treeWidget->topLevelItem(0)->childCount() != 0){
-        QTreeWidgetItem *child = _ui->treeWidget->topLevelItem(0)->takeChild(0);
-        _ui->treeWidget->topLevelItem(0)->removeChild(child);
-    }
+    //    while(_ui->treeWidget->topLevelItem(0)->childCount() != 0){
+    //        QTreeWidgetItem *child = _ui->treeWidget->topLevelItem(0)->takeChild(0);
+    //        _ui->treeWidget->topLevelItem(0)->removeChild(child);
+    //    }
 
-    while(_ui->treeWidget->topLevelItem(1)->childCount() != 0){
-        QTreeWidgetItem *child = _ui->treeWidget->topLevelItem(1)->takeChild(0);
-        _ui->treeWidget->topLevelItem(1)->removeChild(child);
-    }
+    //    while(_ui->treeWidget->topLevelItem(1)->childCount() != 0){
+    //        QTreeWidgetItem *child = _ui->treeWidget->topLevelItem(1)->takeChild(0);
+    //        _ui->treeWidget->topLevelItem(1)->removeChild(child);
+    //    }
+    _ui->treeWidget->clear();
 }
 
 void MainWindow::confirmObjectPosition(){

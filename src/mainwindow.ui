@@ -1398,7 +1398,7 @@
   </action>
   <action name="actionSave_PCD_File">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
@@ -1416,7 +1416,7 @@
   </action>
   <action name="actionAutomatic_plane_detection">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
@@ -1434,7 +1434,7 @@
   </action>
   <action name="actionManual_plane_definition">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
@@ -1452,7 +1452,7 @@
   </action>
   <action name="actionRotate_z_180">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
@@ -1470,7 +1470,7 @@
   </action>
   <action name="actionDesk_segmentation">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
@@ -1488,7 +1488,7 @@
   </action>
   <action name="actionInsert_new_object">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
@@ -1506,7 +1506,7 @@
   </action>
   <action name="actionConfirm_position">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
@@ -1524,7 +1524,7 @@
   </action>
   <action name="actionExport_objects_info">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
@@ -1542,7 +1542,7 @@
   </action>
   <action name="actionImport_objects_info">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
@@ -1560,7 +1560,7 @@
   </action>
   <action name="actionDelete_object">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
@@ -1586,7 +1586,7 @@
     <bool>true</bool>
    </property>
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
@@ -1603,7 +1603,7 @@
   </action>
   <action name="actionDownsample_point_cloud">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
@@ -1615,7 +1615,7 @@
   </action>
   <action name="actionUp">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
@@ -1630,7 +1630,7 @@
   </action>
   <action name="actionFront">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
@@ -1645,7 +1645,7 @@
   </action>
   <action name="actionLeft">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
@@ -1660,7 +1660,7 @@
   </action>
   <action name="actionRight">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">
@@ -1675,7 +1675,7 @@
   </action>
   <action name="actionBack">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../icons/icons.qrc">

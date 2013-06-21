@@ -130,12 +130,12 @@ public:
     /** \brief Export the objects' information in a .xml file
       * \param[in] file The name of the file to export
       */
-    void exportObjectsInformation(QString xmlFile, QString pcdFile);
+    void exportObjectsInformation(QString xmlFile, QString pcdFile, QString scenario);
 
-    /** \brief Import the objects' information loading a .xml file
+    /** \brief Import the objects' information loading a .xml file and returns de type of scenario loaded
       * \param[in] file The name of the file to be imported
       */
-    void importObjectsInformation(QString file);
+    QString importObjectsInformation(QString file);
 
     /** \brief Returns true if the object exists, else otherwise
       * \param[in] object Name of the object to check
