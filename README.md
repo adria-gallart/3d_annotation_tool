@@ -1,6 +1,7 @@
 3d_annotation_tool
 ==================
-Author: Adrià Gallart del Burgo\\
+Author: Adrià Gallart del Burgo
+
 e-mail: adriagallart@gmail.com 
 
 3D Annotation Tool is an application designed to annotate objects in a point
@@ -27,17 +28,21 @@ Two options are available to install the prerequisites for the 3D Annotation
 Tool. The first requires the previous installation of the ROS Groovy.
 
 If the ROS Groovy is installed in your machine:
-	1. Make sure that the pcl package is installed inside the ros. If it is not
+	
+1. Make sure that the pcl package is installed inside the ros. If it is not
  	   installed: sudo apt-get install ros-groovy-pcl
-	2. Install the vtk-qt library: sudo apt-get install libvtk5.8-qt4
+	
+2. Install the vtk-qt library: sudo apt-get install libvtk5.8-qt4
 
 Without ROS Groovy If the ROS Groovy is not installed, the pcl library
 has to be installed. The following is required:
-	1. PCL library:
+	
+1. PCL library:
 		sudo add-apt-repository ppa:v-launchpad-jochen-sprickerhof-de/pcl
 		sudo apt-get update
 		sudo apt-get install libpcl-all-dev
-	2. VTK-QT library:
+	
+2. VTK-QT library:
 		sudo apt-get install libvtk5.8-qt
 
 INSTALLATION
