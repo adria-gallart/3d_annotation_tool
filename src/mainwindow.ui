@@ -1287,6 +1287,7 @@
     </property>
     <addaction name="actionOpen"/>
     <addaction name="actionSave_PCD_File"/>
+    <addaction name="actionSave_PCD_and_export_objects_info"/>
     <addaction name="separator"/>
     <addaction name="actionImport_objects_info"/>
     <addaction name="actionExport_objects_info"/>
@@ -1315,6 +1316,8 @@
     </widget>
     <addaction name="actionCoordinate_system"/>
     <addaction name="menuChange_viewpoint"/>
+    <addaction name="actionLoad_viewpoint"/>
+    <addaction name="actionSave_viewpoint"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -1362,6 +1365,8 @@
    <addaction name="actionLeft"/>
    <addaction name="actionRight"/>
    <addaction name="actionBack"/>
+   <addaction name="actionSave_viewpoint"/>
+   <addaction name="actionLoad_viewpoint"/>
   </widget>
   <action name="actionOpen">
    <property name="icon">
@@ -1698,6 +1703,24 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="actionSave_viewpoint">
+   <property name="text">
+    <string>Save viewpoint</string>
+   </property>
+  </action>
+  <action name="actionLoad_viewpoint">
+   <property name="text">
+    <string>Load viewpoint </string>
+   </property>
+  </action>
+  <action name="actionSave_PCD_and_export_objects_info">
+   <property name="text">
+    <string>S&amp;ave PCD and export objects info</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
    </property>
   </action>
  </widget>

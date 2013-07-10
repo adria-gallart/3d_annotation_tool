@@ -24,7 +24,6 @@
 #include <boost/filesystem/path.hpp>
 
 
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     _ui(new Ui::MainWindow),
@@ -699,7 +698,7 @@ void MainWindow::on_actionBack_triggered(){
     viewInteractor.setCameraPosition(1, 3, 0, 1, 0, 0, 0, 1, 1);
 }
 
-// Action to take when a value on the pose widget is
+// Action to use when a value on the pose widget has been
 // changed manualy
 void MainWindow::on_poseInfo_itemChanged(QTreeWidgetItem *item, int column){
     if(_insertingObject){
@@ -756,6 +755,37 @@ void MainWindow::on_poseInfo_itemChanged(QTreeWidgetItem *item, int column){
     //        item->setText(1, QString::number(0));
 }
 
+// Save the pcd file and the objects' information
+void MainWindow::on_actionSave_PCD_and_export_objects_info_triggered()
+{
+    QString fileNamePCD = QFileDialog::getSaveFileName(this,
+                                                       tr("Save .pcd and .xml file"),
+                                                       _fileName.remove(_fileName.size()-4,4),
+                                                       tr(""));
+    QString fileNameXML = fileNamePCD;
+
+    if(!fileNamePCD.isEmpty()){
+        // Save the .pcd file
+        fileNamePCD.append(".pcd");
+        pcl::io::savePCDFile(fileNamePCD.toStdString(), *_cloud);
+        _fileName = fileNamePCD;
+        _cloudModified = false;
+
+        // Save the objects' information
+        fileNameXML.append(".xml");
+        if(objectsInfo.getDeskLength() != -1){
+            objectsInfo.exportObjectsInformation(fileNameXML, _fileName, _scenario);
+        }
+        else
+            QMessageBox::warning(this,
+                                 "XML file not saved",
+                                 "The objects' information has not been saved because there is no information.");
+
+    }
+    else{
+        QMessageBox::warning(this, "Error", "Files not saved.");
+    }
+}
 
 ///////////////////////////////////////////////////////
 // The following functions are used inside the above //
@@ -1021,16 +1051,6 @@ void MainWindow::displayObjectsInfo(){
 }
 
 void MainWindow::clearInfoTreeWidget(){
-    // Remove all the information saved of the tree widget
-    //    while(_ui->treeWidget->topLevelItem(0)->childCount() != 0){
-    //        QTreeWidgetItem *child = _ui->treeWidget->topLevelItem(0)->takeChild(0);
-    //        _ui->treeWidget->topLevelItem(0)->removeChild(child);
-    //    }
-
-    //    while(_ui->treeWidget->topLevelItem(1)->childCount() != 0){
-    //        QTreeWidgetItem *child = _ui->treeWidget->topLevelItem(1)->takeChild(0);
-    //        _ui->treeWidget->topLevelItem(1)->removeChild(child);
-    //    }
     _ui->treeWidget->clear();
 }
 
@@ -1104,8 +1124,6 @@ void MainWindow::showInitialMessage(){
 }
 
 
-
-
 void MainWindow::on_actionShow_info_messages_toggled(bool arg1)
 {
     if(arg1)
@@ -1141,4 +1159,18 @@ void MainWindow::on_actionDownsample_point_cloud_triggered()
 
     // Enable Undo function
     _ui->actionUndo->setEnabled(true);
+}
+
+void MainWindow::on_actionSave_viewpoint_triggered()
+{
+    std::vector<pcl::visualization::Camera> cameras;
+    viewInteractor.getCameraParameters(cameras);
+
+    std::cout << "Number of cameras: " << cameras.size() << std::endl;
+    std::cout << "Camera pose: x: " << cameras[0].pos[0]
+              << " y: " << cameras[0].pos[1]
+              << " z: " << cameras[0].pos[2] << std::endl;
+    std::cout << "Camera view: x: " << cameras[0].view[0]
+              << " y: " << cameras[0].view[1]
+              << " z: " << cameras[0].view[2] << std::endl;
 }

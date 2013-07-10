@@ -122,6 +122,10 @@ private slots:
 
     void on_actionDownsample_point_cloud_triggered();
 
+    void on_actionSave_viewpoint_triggered();
+
+    void on_actionSave_PCD_and_export_objects_info_triggered();
+
 private:
     // The main window used
     Ui::MainWindow *_ui;
