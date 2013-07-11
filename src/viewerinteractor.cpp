@@ -63,6 +63,11 @@ void viewerInteractor::getPointPicked(pcl::PointXYZRGB *point){
     point->y=pickedPoints.y;
     point->z=pickedPoints.z;
     picked = false;
+
+    // Draw an sphere arround the selected point
+    QString sphere = QString::number(_numberOfSpheres);
+    _viewer->addSphere(*point, 0.009, 1, 1, 0.0, sphere.toStdString());
+    _numberOfSpheres++;
 }
 
 void viewerInteractor::getPointsPicked(int nPoints, std::vector<pointT> *pointsPicked){
@@ -91,7 +96,6 @@ void viewerInteractor::visualizePointCloud(pointCloudPtr cloud){
     pcl::visualization::PointCloudColorHandlerRGBField<pointT> rgb(cloud);
     _viewer->addPointCloud<pointT>(cloud,rgb);
     _viewer->setBackgroundColor(0, 0, 0);
-    _viewer->addCoordinateSystem(0.5);
     render();
 }
 
@@ -252,9 +256,9 @@ void viewerInteractor::getPointsInBoundingBox(pointCloudPtr cloud, pcl::PointInd
 
         for(size_t index = 0; index < cloud->points.size(); index++){
             pcl::PointXYZ pointToCheck;
-            pointToCheck .x = cloudAux->points[index].x;
-            pointToCheck .y = cloudAux->points[index].y;
-            pointToCheck .z = cloudAux->points[index].z;
+            pointToCheck.x = cloudAux->points[index].x;
+            pointToCheck.y = cloudAux->points[index].y;
+            pointToCheck.z = cloudAux->points[index].z;
             if (pointToCheck.x > 0 && pointToCheck.y > 0 && pointToCheck.z > 0
                     && pointToCheck.x < _boxLength && pointToCheck.y < _boxWidth && pointToCheck.z < _boxHeight){
                 indices->indices.push_back(index);
@@ -316,4 +320,8 @@ vtkSmartPointer<vtkRenderWindow> viewerInteractor::getRenderWindow(int width, in
     vtkSmartPointer<vtkRenderWindow> renderWin = _viewer->getRenderWindow();
     renderWin->SetSize(width, height);
     return renderWin;
+}
+
+void viewerInteractor::getCameraParameters(std::vector<pcl::visualization::Camera>& cameras){
+    _viewer->getCameras(cameras);
 }

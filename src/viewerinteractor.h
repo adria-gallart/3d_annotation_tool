@@ -2,6 +2,7 @@
 #define VIEWERINTERACTOR_H
 
 #include <pcl/visualization/pcl_visualizer.h>
+#include <pcl/visualization/common/common.h>
 #include "pointcloudmodifier.h"
 #include "objectsinformation.h"
 
@@ -139,6 +140,9 @@ public:
       */
     void redefineHeight(float height);
 
+
+    // Falta per comentar /////
+    // ++++++++++++++++++ ///
     void setCameraPosition(double posX, double posY, double posZ,
                            double viewX, double viewY, double viewZ,
                            double upX, double upY, double upZ);
@@ -164,12 +168,17 @@ public:
         _viewer->getRenderWindow()->Render();
     }
 
+    void getCameraParameters(std::vector<pcl::visualization::Camera>& cameras);
+
 private:
     // PCL visualizer
     boost::shared_ptr<pcl::visualization::PCLVisualizer> _viewer;
 
     // List of current point cloud drawn
     std::vector<std::string> _listClouds;
+
+    // Number of spheres drawn
+    double _numberOfSpheres;
 
     // Bounding box parameters
     pcl::PointXYZ _pose;
