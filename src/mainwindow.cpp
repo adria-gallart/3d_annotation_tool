@@ -411,84 +411,89 @@ void MainWindow::on_actionDesk_segmentation_triggered(){
         }
     }
     else{
-        // Ask if it will be a desk, floor
+        // Ask if it will be a desk, floor, etc
         chooseObjectDialog env(0,1);
         env.exec();
         _scenario = env.getObjectName();
-        QTreeWidgetItem *itm_scenario = new QTreeWidgetItem(_ui->treeWidget);
-        itm_scenario->setText(0, _scenario);
-        _ui->treeWidget->insertTopLevelItem(0,itm_scenario);
+        if(!_scenario.isEmpty()){
+            QTreeWidgetItem *itm_scenario = new QTreeWidgetItem(_ui->treeWidget);
+            itm_scenario->setText(0, _scenario);
+            _ui->treeWidget->insertTopLevelItem(0,itm_scenario);
 
-        // Insert the objects items
-        QTreeWidgetItem *itm_objects = new QTreeWidgetItem(_ui->treeWidget);
-        itm_objects->setText(0, QString::fromStdString("Objects"));
-        _ui->treeWidget->insertTopLevelItem(0,itm_objects);
+            // Insert the objects items
+            QTreeWidgetItem *itm_objects = new QTreeWidgetItem(_ui->treeWidget);
+            itm_objects->setText(0, QString::fromStdString("Objects"));
+            _ui->treeWidget->insertTopLevelItem(0,itm_objects);
 
-        pointT pointPicked;
-        float table_length, table_width;
+            pointT pointPicked;
+            float table_length, table_width;
 
-        // Copy the point cloud if the user want to undo the segmentation
-        pcl::copyPointCloud(*_cloud, *_cloudUndo);
+            // Copy the point cloud if the user want to undo the segmentation
+            pcl::copyPointCloud(*_cloud, *_cloudUndo);
 
-        // Segmentate the table given three points picked by the user
+            // Segmentate the table given three points picked by the user
 
-        // Pick the first point needed: lower left corner
-        if(_showInfoMsgs) QMessageBox::information(this,
-                                                   "Pick a point",
-                                                   "Pick the lower left corner of the table with shift+left mouse button.");
-        viewInteractor.getPointPicked(&pointPicked);
+            // Pick the first point needed: lower left corner
+            if(_showInfoMsgs) QMessageBox::information(this,
+                                                       "Pick a point",
+                                                       "Pick the lower left corner of the table with shift+left mouse button.");
+            viewInteractor.getPointPicked(&pointPicked);
 
-        // Move the pointcloud to the lower left corner of the table
-        cloudModifier.translate_on_plane_x_y(_cloud, _cloud, pointPicked);
-        visualize();
+            // Move the pointcloud to the lower left corner of the table
+            cloudModifier.translate_on_plane_x_y(_cloud, _cloud, pointPicked);
+            visualize();
 
-        // Pick the second point needed: lower right corner
-        if(_showInfoMsgs) QMessageBox::information(this,
-                                                   "Pick a point",
-                                                   "Pick the lower right corner of the table with shift+left mouse button");
-        viewInteractor.getPointPicked(&pointPicked);
+            // Pick the second point needed: lower right corner
+            if(_showInfoMsgs) QMessageBox::information(this,
+                                                       "Pick a point",
+                                                       "Pick the lower right corner of the table with shift+left mouse button");
+            viewInteractor.getPointPicked(&pointPicked);
 
-        // Align the x axis with the lower edge of the table and calculate the table length
-        cloudModifier.align_x_with_edge(_cloud, _cloud, pointPicked);
-        pcl::PointXYZ origin(0,0,0);
-        table_length = pcl::euclideanDistance(origin, pointPicked);
-        visualize();
+            // Align the x axis with the lower edge of the table and calculate the table length
+            cloudModifier.align_x_with_edge(_cloud, _cloud, pointPicked);
+            pcl::PointXYZ origin(0,0,0);
+            table_length = pcl::euclideanDistance(origin, pointPicked);
+            visualize();
 
-        // Pick the third point needed: one of the upper edge of the table
-        if(_showInfoMsgs) QMessageBox::information(this,
-                                                   "Pick a point",
-                                                   "Pick a point on the upper edge of the table with shift+left mouse button");
-        viewInteractor.getPointPicked(&pointPicked);
+            // Pick the third point needed: one of the upper edge of the table
+            if(_showInfoMsgs) QMessageBox::information(this,
+                                                       "Pick a point",
+                                                       "Pick a point on the upper edge of the table with shift+left mouse button");
+            viewInteractor.getPointPicked(&pointPicked);
 
-        // Eliminate points below the table
-        // Min value of 0 remove points from the table -> set to -0.02
-        cloudModifier.filter_axis(_cloud, _cloud, "z", -0.02, 5);
+            // Eliminate points below the table
+            // Min value of 0 remove points from the table -> set to -0.02
+            cloudModifier.filter_axis(_cloud, _cloud, "z", -0.02, 5);
 
-        //Eliminate points at right and left side of the table
-        cloudModifier.filter_axis(_cloud, _cloud, "x", 0, table_length);
+            //Eliminate points at right and left side of the table
+            cloudModifier.filter_axis(_cloud, _cloud, "x", 0, table_length);
 
-        //Eliminate points upper and lower side the table
-        table_width = pointPicked.y;
-        cloudModifier.filter_axis(_cloud, _cloud, "y", 0, table_width);
+            //Eliminate points upper and lower side the table
+            table_width = pointPicked.y;
+            cloudModifier.filter_axis(_cloud, _cloud, "y", 0, table_width);
 
-        //Pass the table dimensions
-        objectsInfo.setDeskDimensions(table_length, table_width);
+            //Pass the table dimensions
+            objectsInfo.setDeskDimensions(table_length, table_width);
 
-        //Insert length information in the QtreeWidget
-        displayDeskLengthInfo();
+            //Insert length information in the QtreeWidget
+            displayDeskLengthInfo();
 
-        //Insert width information in the QtreeWidget
-        displayDeskWidthInfo();
+            //Insert width information in the QtreeWidget
+            displayDeskWidthInfo();
 
-        visualize();
-        _cloudModified = true;
-        _planeDefined=true;
-        _ui->actionUndo->setEnabled(true);
+            visualize();
+            _cloudModified = true;
+            _planeDefined=true;
+            _ui->actionUndo->setEnabled(true);
 
-        // Remind to save it
-        if(_showInfoMsgs) QMessageBox::information(this,
-                                                   "Save the point cloud",
-                                                   "It is recommended to save now the point cloud.");
+            // Remind to save it
+            if(_showInfoMsgs) QMessageBox::information(this,
+                                                       "Save the point cloud",
+                                                       "It is recommended to save now the point cloud.");
+
+            // Desactivate this action
+            _ui->actionDesk_segmentation->setEnabled(false);
+        }
     }
 }
 
@@ -656,7 +661,9 @@ void MainWindow::on_actionExport_objects_info_triggered(){
         }
     }
     else {
-        QMessageBox::warning(this, "Error", "Length and width of the table not defined.");
+        QMessageBox::warning(this,
+                             "Error",
+                             "Length and width of the plane not defined. Please, proceed to do the plane segmentation");
     }
 }
 
@@ -845,6 +852,11 @@ void MainWindow::visualize(){
     }
     // Visualize the point cloud and set the render windows
     viewInteractor.visualizePointCloud(_cloud);
+
+    // Add the coordinate system if it's requiered
+    if(_ui->actionCoordinate_system->isChecked()){
+        viewInteractor.addCoordinateSystem();
+    }
 }
 
 
@@ -1134,8 +1146,19 @@ void MainWindow::on_actionShow_info_messages_toggled(bool arg1)
 
 void MainWindow::on_actionUndo_triggered()
 {
+    // Reload the previous point cloud and visualize it
     pcl::copyPointCloud(*_cloudUndo, *_cloud);
     visualize();
+
+    // If the undo is done after the segmentation, delete the information
+    // of the tree widget and allow the user to do the segmentation again
+    if(!_ui->actionDesk_segmentation->isEnabled()){
+        clearInfoTreeWidget();
+        _ui->actionDesk_segmentation->setEnabled(true);
+        objectsInfo.clear();
+    }
+
+    // Disable this action
     _ui->actionUndo->setEnabled(false);
 }
 
