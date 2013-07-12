@@ -12,6 +12,8 @@
 #include <pcl/point_types.h>
 #include <pcl/io/pcd_io.h>
 
+#include <eigen3/Eigen/Eigen>
+
 
 
 namespace Ui {
@@ -122,8 +124,6 @@ private slots:
 
     void on_actionDownsample_point_cloud_triggered();
 
-    void on_actionSave_viewpoint_triggered();
-
     void on_actionSave_PCD_and_export_objects_info_triggered();
 
 private:
@@ -162,8 +162,13 @@ private:
     // Scenario
     QString _scenario;
 
+    // Camera and view point
+    pcl::visualization::Camera _camera;
+    Eigen::Affine3f _viewPose;
+
+
     // Some bool variables
-    bool _pcdLoaded, _planeDefined;
+    bool _pcdLoaded, _planeDefined, _planeSegmentated;
     bool _insertingObject, _objectModifed;
     bool _itemSelected, _cloudModified;
     bool _showInfoMsgs, _showInitialMsg;

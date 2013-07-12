@@ -143,9 +143,9 @@ public:
 
     // Falta per comentar /////
     // ++++++++++++++++++ ///
-    void setCameraPosition(double posX, double posY, double posZ,
-                           double viewX, double viewY, double viewZ,
-                           double upX, double upY, double upZ);
+    void setCameraPose(double posX, double posY, double posZ,
+                       double viewX, double viewY, double viewZ,
+                       double upX, double upY, double upZ);
 
     /** \brief Returns the pointer of the render window
       * \param[in] width Width of the window
@@ -168,7 +168,7 @@ public:
         _viewer->getRenderWindow()->Render();
     }
 
-    void getCameraParameters(std::vector<pcl::visualization::Camera>& cameras);
+    Eigen::Affine3f getCameraParametersAndPose(std::vector<pcl::visualization::Camera>& cameras);
 
 private:
     // PCL visualizer

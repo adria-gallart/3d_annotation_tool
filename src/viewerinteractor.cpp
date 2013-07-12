@@ -308,9 +308,9 @@ void viewerInteractor::removeBoundingBox(){
     _viewer->removeAllShapes();
 }
 
-void viewerInteractor::setCameraPosition(double posX, double posY, double posZ,
-                                         double viewX, double viewY, double viewZ,
-                                         double upX, double upY, double upZ){
+void viewerInteractor::setCameraPose(double posX, double posY, double posZ,
+                                     double viewX, double viewY, double viewZ,
+                                     double upX, double upY, double upZ){
 
     _viewer->setCameraPose(posX, posY, posZ, viewX, viewY, viewZ, upX, upY, upZ);
     render();
@@ -322,6 +322,10 @@ vtkSmartPointer<vtkRenderWindow> viewerInteractor::getRenderWindow(int width, in
     return renderWin;
 }
 
-void viewerInteractor::getCameraParameters(std::vector<pcl::visualization::Camera>& cameras){
+Eigen::Affine3f viewerInteractor::getCameraParametersAndPose(std::vector<pcl::visualization::Camera>& cameras){
+    Eigen::Affine3f viewPose;
+    viewPose = _viewer->getViewerPose();
     _viewer->getCameras(cameras);
+    return viewPose;
+
 }

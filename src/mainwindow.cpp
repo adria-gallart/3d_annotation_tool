@@ -18,7 +18,7 @@
 #include <pcl/common/angles.h>
 
 #include <math.h>
-#include <eigen3/Eigen/Eigen>
+#include <eigen3/Eigen/Dense>
 
 #include <boost/property_tree/xml_parser.hpp>
 #include <boost/filesystem/path.hpp>
@@ -483,13 +483,13 @@ void MainWindow::on_actionDesk_segmentation_triggered(){
 
             visualize();
             _cloudModified = true;
-            _planeDefined=true;
+            _planeSegmentated = true;
             _ui->actionUndo->setEnabled(true);
 
             // Remind to save it
             if(_showInfoMsgs) QMessageBox::information(this,
-                                                       "Save the point cloud",
-                                                       "It is recommended to save now the point cloud.");
+                                                       "Save the progress",
+                                                       "It is recommended to save now the point cloud and the plane information.");
 
             // Desactivate this action
             _ui->actionDesk_segmentation->setEnabled(false);
@@ -500,8 +500,12 @@ void MainWindow::on_actionDesk_segmentation_triggered(){
 // Insert new annotation of an object
 void MainWindow::on_actionInsert_new_object_triggered(){
     //  First is checked if the pcd file is loaded.
-    if(!_pcdLoaded){
-        QMessageBox::warning(this, "Error", "Firstly, you must load a pcd file.");
+    if(!_pcdLoaded | !_planeSegmentated){
+
+        if(!_pcdLoaded)
+            QMessageBox::warning(this, "Error", "Firstly, you must load a pcd file.");
+        else
+            QMessageBox::warning(this, "Error", "Firstly, you must segmentate the plane.");
     }
 
     else{
@@ -635,6 +639,9 @@ void MainWindow::on_actionImport_objects_info_triggered(){
 
         // Actualize tree widget with the loaded objects and the table size
         actualizeInformationTreeWidget();
+
+        // Allow the user insert new objects
+        _planeSegmentated = true;
     }
     else{
         QMessageBox::warning(this, "Error", "File not load.");
@@ -686,23 +693,23 @@ void MainWindow::on_actionCoordinate_system_toggled(bool arg1){
 // Next 5 functions: Slots to change the position of
 // the camera view
 void MainWindow::on_actionUp_triggered(){
-    viewInteractor.setCameraPosition(0.5, 0.5, 3, 0.5, 0.5, 0, 0, 1, 0);
+    viewInteractor.setCameraPose(0.5, 0.5, 3, 0.5, 0.5, 0, 0, 1, 0);
 }
 
 void MainWindow::on_actionFront_triggered(){
-    viewInteractor.setCameraPosition(0.5, -2, 0, 0.5, 0, 0, 0, 1, 1);
+    viewInteractor.setCameraPose(0.5, -2, 0, 0.5, 0, 0, 0, 1, 1);
 }
 
 void MainWindow::on_actionLeft_triggered(){
-    viewInteractor.setCameraPosition(-2, 0.5, 0, 0, 0.5, 0, 1, 0, 1);
+    viewInteractor.setCameraPose(-2, 0.5, 0, 0, 0.5, 0, 1, 0, 1);
 }
 
 void MainWindow::on_actionRight_triggered(){
-    viewInteractor.setCameraPosition(2, 0.5, 0, 0, 0.5, 0, -1, 0, 1);
+    viewInteractor.setCameraPose(2, 0.5, 0, 0, 0.5, 0, -1, 0, 1);
 }
 
 void MainWindow::on_actionBack_triggered(){
-    viewInteractor.setCameraPosition(1, 3, 0, 1, 0, 0, 0, 1, 1);
+    viewInteractor.setCameraPose(1, 3, 0, 1, 0, 0, 0, 1, 1);
 }
 
 // Action to use when a value on the pose widget has been
@@ -794,6 +801,80 @@ void MainWindow::on_actionSave_PCD_and_export_objects_info_triggered()
     }
 }
 
+
+
+void MainWindow::on_actionShow_info_messages_toggled(bool arg1)
+{
+    if(arg1)
+        _showInfoMsgs = true;
+    else
+        _showInfoMsgs = false;
+}
+
+void MainWindow::on_actionUndo_triggered()
+{
+    // Reload the previous point cloud and visualize it
+    pcl::copyPointCloud(*_cloudUndo, *_cloud);
+    visualize();
+
+    // If the undo is done after the segmentation, delete the information
+    // of the tree widget and allow the user to do the segmentation again
+    if(!_ui->actionDesk_segmentation->isEnabled()){
+        clearInfoTreeWidget();
+        _ui->actionDesk_segmentation->setEnabled(true);
+        objectsInfo.clear();
+    }
+
+    // Disable this action
+    _ui->actionUndo->setEnabled(false);
+}
+
+void MainWindow::on_actionDownsample_point_cloud_triggered()
+{
+    // Call the dialog to introduce the filter values
+    filtervaluesdialog filterDialog;
+    filterDialog.exec();
+    float leaf = filterDialog.getLeafSize();
+
+    // Copy the filter to Undo function
+    pcl::copyPointCloud(*_cloud, *_cloudUndo);
+
+    // Create the filtering object
+    pcl::VoxelGrid<pointT> sor;
+    sor.setInputCloud (_cloud);
+    sor.setLeafSize(leaf, leaf, leaf);
+    //    sor.setLeafSize (0.01f, 0.01f, 0.01f);
+    sor.filter (*_cloud);
+    visualize();
+
+    // Enable Undo function
+    _ui->actionUndo->setEnabled(true);
+}
+
+//void MainWindow::on_actionSave_viewpoint_triggered()
+//{
+//    std::vector<pcl::visualization::Camera> cameras;
+//    _viewPose = viewInteractor.getCameraParametersAndPose(cameras);
+//    _camera = cameras[0];
+
+//    std::cout << "Number of cameras: " << cameras.size() << std::endl;
+//    std::cout << "Camera pose: x: " << cameras[0].pos[0]
+//              << " y: " << cameras[0].pos[1]
+//              << " z: " << cameras[0].pos[2] << std::endl;
+//    std::cout << "Camera view: x: " << cameras[0].view[0]
+//              << " y: " << cameras[0].view[1]
+//              << " z: " << cameras[0].view[2] << std::endl;
+//}
+
+//void MainWindow::on_actionLoad_viewpoint_triggered()
+//{
+//    viewInteractor.setCameraPose(_camera.pos[0], _camera.pos[1], _camera.pos[2],
+//                                 0, 0, 0,
+//                                 _camera.view[0], _camera.view[0], _camera.view[0]);
+
+//    std::cout << _viewPose(0,1) << "  " << _viewPose(1,0) << "  " << _viewPose(2,0) << std::endl;
+//}
+
 ///////////////////////////////////////////////////////
 // The following functions are used inside the above //
 // functions (slots)                                 //
@@ -807,6 +888,7 @@ void MainWindow::init(){
     // Start the bool variables
     _pcdLoaded = false;
     _planeDefined = false;
+    _planeSegmentated = false;
     _insertingObject = false;
     _objectModifed = false;
     _cloudModified = false;
@@ -918,6 +1000,7 @@ void MainWindow::load_pcd_file(QString fileName){
     // Remove all the objects information saved
     objectsInfo.clear();
     _planeDefined = false;
+    _planeSegmentated = false;
 
     // Read the point cloud
     reader.read(fileName.toStdString(), *_cloud);
@@ -1133,67 +1216,4 @@ void MainWindow::showInitialMessage(){
             write_xml(info_doc.toStdString(), root, std::locale(), settings);
         }
     }
-}
-
-
-void MainWindow::on_actionShow_info_messages_toggled(bool arg1)
-{
-    if(arg1)
-        _showInfoMsgs = true;
-    else
-        _showInfoMsgs = false;
-}
-
-void MainWindow::on_actionUndo_triggered()
-{
-    // Reload the previous point cloud and visualize it
-    pcl::copyPointCloud(*_cloudUndo, *_cloud);
-    visualize();
-
-    // If the undo is done after the segmentation, delete the information
-    // of the tree widget and allow the user to do the segmentation again
-    if(!_ui->actionDesk_segmentation->isEnabled()){
-        clearInfoTreeWidget();
-        _ui->actionDesk_segmentation->setEnabled(true);
-        objectsInfo.clear();
-    }
-
-    // Disable this action
-    _ui->actionUndo->setEnabled(false);
-}
-
-void MainWindow::on_actionDownsample_point_cloud_triggered()
-{
-    // Call the dialog to introduce the filter values
-    filtervaluesdialog filterDialog;
-    filterDialog.exec();
-    float leaf = filterDialog.getLeafSize();
-
-    // Copy the filter to Undo function
-    pcl::copyPointCloud(*_cloud, *_cloudUndo);
-
-    // Create the filtering object
-    pcl::VoxelGrid<pointT> sor;
-    sor.setInputCloud (_cloud);
-    sor.setLeafSize(leaf, leaf, leaf);
-    //    sor.setLeafSize (0.01f, 0.01f, 0.01f);
-    sor.filter (*_cloud);
-    visualize();
-
-    // Enable Undo function
-    _ui->actionUndo->setEnabled(true);
-}
-
-void MainWindow::on_actionSave_viewpoint_triggered()
-{
-    std::vector<pcl::visualization::Camera> cameras;
-    viewInteractor.getCameraParameters(cameras);
-
-    std::cout << "Number of cameras: " << cameras.size() << std::endl;
-    std::cout << "Camera pose: x: " << cameras[0].pos[0]
-              << " y: " << cameras[0].pos[1]
-              << " z: " << cameras[0].pos[2] << std::endl;
-    std::cout << "Camera view: x: " << cameras[0].view[0]
-              << " y: " << cameras[0].view[1]
-              << " z: " << cameras[0].view[2] << std::endl;
 }
