@@ -7,7 +7,15 @@
 class qsr
 {
 public:
-    qsr();
+    qsr(std::vector<object> objectList);
+
+    void calculateQSROnRight();
+
+    void calculateQSROnLeft();
+
+    void calculateQSRInFront();
+
+    void calculateQSRBehind();
 
 private:
     pcl::PointXYZ getCenterOfMass(object obj);
@@ -16,23 +24,36 @@ private:
 
     void calculatePointTrajector(object trajector);
 
-    void calculateAnglesOnRight();
+    void calculateAnglesAndDistanceOnRight();
 
-    void calculateAnglesOnLeft();
+    void calculateAnglesAndDistanceOnLeft();
 
-    void calculateAnglesInFront();
+    void calculateAnglesAndDistanceInFront();
 
-    void calculateAnglesBehind();
+    void calculateAnglesAndDistanceBehind();
 
+    float angleFunction(float angle);
+
+    float distanceFunction(float distance);
+
+    float qsrOnRight();
+
+    float qsrOnLeft();
+
+    float qsrInFront();
+
+    float qsrBehind();
 
     pcl::PointXYZ _FLDPoint, _FRDPoint, _BRDPoint, _BLDPoint;
     pcl::PointXYZ _FCPoint, _RCPoint, _BCPoint, _LCPoint;
     pcl::PointXYZ _centerOfMassTrajector;
 
-    float _angleRightOnRight, _angleLeftOnRight;
-    float _angleRightOnLeft, _angleLeftOnLeft;
-    float _angleRightInFront, _angleLeftInFront;
-    float _angleRightBehind, _angleLeftBehind;
+    float _angleRightOnRight, _angleLeftOnRight, _distanceOnRight;
+    float _angleRightOnLeft, _angleLeftOnLeft, _distanceOnLeft;
+    float _angleRightInFront, _angleLeftInFront, _distanceInFront;
+    float _angleRightBehind, _angleLeftBehind, _distanceBehind;
+
+    std::vector<object> _objectList;
 };
 
 #endif // QSR_H

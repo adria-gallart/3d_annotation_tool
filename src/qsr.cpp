@@ -1,11 +1,167 @@
 #include "qsr.h"
 
+#include <math.h>
+#include <iomanip>
+
 #include <pcl/common/transforms.h>
 #include <pcl/common/eigen.h>
 #include <pcl/common/angles.h>
 
-qsr::qsr()
+qsr::qsr(std::vector<object> objectList)
 {
+    _objectList = objectList;
+}
+
+void qsr::calculateQSROnRight(){
+
+    float values[_objectList.size()][_objectList.size()];
+
+    // Calculate values
+    for(int i=0; i < _objectList.size(); i++){
+        calculatePointsLandmark(_objectList[i]);
+        for(int j=0; j < _objectList.size(); j++){
+            if(j == i) values[j][i] = -1;
+            else{
+                calculatePointTrajector(_objectList[j]);
+                values[j][i] = qsrOnRight();
+            }
+        }
+    }
+
+    // Print the table
+    std::cout << "------------------------------------------------" << std::endl;
+    std::cout << "----------On Right of---------------------------" << std::endl;
+    std::cout << "------------------------------------------------\n" << std::endl;
+
+    std::cout << std::setw(10) << "" << std::ends;
+    for(int i = 0; i < _objectList.size(); i++){
+        std::cout << std::setw(10) << _objectList[i].name.toStdString() << std::ends;
+    }
+    std::cout << std::endl;
+
+    for(int i = 0; i < _objectList.size(); i++){
+        std::cout << std::setw(10) << std::left << _objectList[i].name.toStdString() << std::ends;
+        for(int j = 0; j < _objectList.size(); j++){
+            if(i==j)std::cout << std::setw(10) << std::right << "X" << std::ends;
+            else std::cout << std::setw(10) << std::right << std::setprecision(2)  << values[i][j] << std::ends;
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
+}
+
+void qsr::calculateQSROnLeft(){
+
+    float values[_objectList.size()][_objectList.size()];
+
+    // Calculate values
+    for(int i=0; i < _objectList.size(); i++){
+        calculatePointsLandmark(_objectList[i]);
+        for(int j=0; j < _objectList.size(); j++){
+            if(j == i) values[j][i] = -1;
+            else{
+                calculatePointTrajector(_objectList[j]);
+                values[j][i] = qsrOnLeft();
+            }
+        }
+    }
+
+    // Print the table
+    std::cout << "------------------------------------------------" << std::endl;
+    std::cout << "----------On Left of----------------------------" << std::endl;
+    std::cout << "------------------------------------------------\n" << std::endl;
+
+    std::cout << std::setw(10) << "" << std::ends;
+    for(int i = 0; i < _objectList.size(); i++){
+        std::cout << std::setw(10) << _objectList[i].name.toStdString() << std::ends;
+    }
+    std::cout << std::endl;
+
+    for(int i = 0; i < _objectList.size(); i++){
+        std::cout << std::setw(10) << std::left << _objectList[i].name.toStdString() << std::ends;
+        for(int j = 0; j < _objectList.size(); j++){
+            if(i==j)std::cout << std::setw(10) << std::right << "X" << std::ends;
+            else std::cout << std::setw(10) << std::setprecision(2) << std::right << values[i][j] << std::ends;
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
+}
+
+void qsr::calculateQSRInFront(){
+
+    float values[_objectList.size()][_objectList.size()];
+
+    // Calculate values
+    for(int i=0; i < _objectList.size(); i++){
+        calculatePointsLandmark(_objectList[i]);
+        for(int j=0; j < _objectList.size(); j++){
+            if(j == i) values[j][i] = -1;
+            else{
+                calculatePointTrajector(_objectList[j]);
+                values[j][i] = qsrInFront();
+            }
+        }
+    }
+
+    // Print the table
+    std::cout << "------------------------------------------------" << std::endl;
+    std::cout << "----------In Front of---------------------------" << std::endl;
+    std::cout << "------------------------------------------------\n" << std::endl;
+
+    std::cout << std::setw(10) << "" << std::ends;
+    for(int i = 0; i < _objectList.size(); i++){
+        std::cout << std::setw(10) << _objectList[i].name.toStdString() << std::ends;
+    }
+    std::cout << std::endl;
+
+    for(int i = 0; i < _objectList.size(); i++){
+        std::cout << std::setw(10) << std::left << _objectList[i].name.toStdString() << std::ends;
+        for(int j = 0; j < _objectList.size(); j++){
+            if(i==j)std::cout << std::setw(10) << std::right << "X" << std::ends;
+            else std::cout << std::setw(10) << std::right << std::setprecision(2)  << values[i][j] << std::ends;
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
+}
+
+void qsr::calculateQSRBehind(){
+
+    float values[_objectList.size()][_objectList.size()];
+
+    // Calculate values
+    for(int i=0; i < _objectList.size(); i++){
+        calculatePointsLandmark(_objectList[i]);
+        for(int j=0; j < _objectList.size(); j++){
+            if(j == i) values[j][i] = -1;
+            else{
+                calculatePointTrajector(_objectList[j]);
+                values[j][i] = qsrBehind();
+            }
+        }
+    }
+
+    // Print the table
+    std::cout << "------------------------------------------------" << std::endl;
+    std::cout << "----------Behind of-----------------------------" << std::endl;
+    std::cout << "------------------------------------------------\n" << std::endl;
+
+    std::cout << std::setw(10) << "" << std::ends;
+    for(int i = 0; i < _objectList.size(); i++){
+        std::cout << std::setw(10) << _objectList[i].name.toStdString() << std::ends;
+    }
+    std::cout << std::endl;
+
+    for(int i = 0; i < _objectList.size(); i++){
+        std::cout << std::setw(10) << std::left << _objectList[i].name.toStdString() << std::ends;
+        for(int j = 0; j < _objectList.size(); j++){
+            if(i==j)std::cout << std::setw(10) << std::right << "X" << std::ends;
+            else std::cout << std::setw(10) << std::right << std::setprecision(2)  << values[i][j] << std::ends;
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
 }
 
 pcl::PointXYZ qsr::getCenterOfMass(object obj){
@@ -89,7 +245,7 @@ void qsr::calculatePointTrajector(object trajector){
     _centerOfMassTrajector = getCenterOfMass(trajector);
 }
 
-void qsr::calculateAnglesOnRight(){
+void qsr::calculateAnglesAndDistanceOnRight(){
     // Front face direction
     Eigen::Vector4f frontDirection4f(_FRDPoint.x - _FLDPoint.x, _FRDPoint.y - _FLDPoint.y, 0, 0);
     Eigen::Vector3f frontDirection3f = frontDirection4f.segment(0,3);
@@ -123,18 +279,11 @@ void qsr::calculateAnglesOnRight(){
     _angleLeftOnRight = pcl::getAngle3D (leftCornerCenterLine4f, frontDirection4f);
     if(crossProductLeft(2)>0) _angleLeftOnRight = 2*M_PI-_angleLeftOnRight;
 
-    //    std::cout << "----------------- On right of -----------------" << std::endl;
-    //    std::cout << "Angle Right: " << pcl::rad2deg(angleRight) << std::endl;
-    //    std::cout << "Angle Left: " << pcl::rad2deg(angleLeft) << std::endl;
-
-    //    if(angleRight < M_PI/2 && angleLeft < M_PI/2)
-    //        std::cout << "The trajector can be on the right of the landmark.\n" << std::endl;
-    //    else
-    //        std::cout << "The trajector is not on the right of the landmark.\n" << std::endl;
-
+    // Calculate the distance
+    _distanceOnRight = pcl::euclideanDistance(_centerOfMassTrajector, _RCPoint);
 }
 
-void qsr::calculateAnglesOnLeft(){
+void qsr::calculateAnglesAndDistanceOnLeft(){
     // Front face direction
     Eigen::Vector4f backDirection4f(_BRDPoint.x - _BLDPoint.x, _BRDPoint.y - _BLDPoint.y, 0, 0);
     Eigen::Vector3f backDirection3f = backDirection4f.segment(0,3);
@@ -167,17 +316,11 @@ void qsr::calculateAnglesOnLeft(){
     _angleLeftOnLeft = pcl::getAngle3D (leftCornerCenterLine4f, backDirection4f);
     if(crossProductLeft(2)>0) _angleLeftOnLeft = 2*M_PI-_angleLeftOnLeft;
 
-    //    std::cout << "----------------- On left of -----------------" << std::endl;
-    //    std::cout << "Angle Right: " << pcl::rad2deg(angleRight) << std::endl;
-    //    std::cout << "Angle Left: " << pcl::rad2deg(angleLeft) << std::endl;
-
-    //    if(angleRight < M_PI/2 && angleLeft < M_PI/2)
-    //        std::cout << "The trajector can be in the left of the landmark.\n" << std::endl;
-    //    else
-    //        std::cout << "The trajector is not in the left of the landmark.\n" << std::endl;
+    // Calculate the distance
+    _distanceOnLeft = pcl::euclideanDistance(_centerOfMassTrajector, _LCPoint);
 }
 
-void qsr::calculateAnglesInFront(){
+void qsr::calculateAnglesAndDistanceInFront(){
     // Left face direction
     Eigen::Vector4f leftDirection4f(_FLDPoint.x - _BRDPoint.x, _FLDPoint.y - _BRDPoint.y, 0, 0);
     Eigen::Vector3f leftDirection3f = leftDirection4f.segment(0,3);
@@ -210,17 +353,11 @@ void qsr::calculateAnglesInFront(){
     _angleLeftInFront = pcl::getAngle3D (leftCornerCenterLine4f, leftDirection4f);
     if(crossProductLeft(2)>0) _angleLeftInFront = 2*M_PI-_angleLeftInFront;
 
-    //    std::cout << "----------------- In front of -----------------" << std::endl;
-    //    std::cout << "Angle Right: " << pcl::rad2deg(angleRight) << std::endl;
-    //    std::cout << "Angle Left: " << pcl::rad2deg(angleLeft) << std::endl;
-
-    //    if(angleRight < M_PI/2 && angleLeft < M_PI/2)
-    //        std::cout << "The trajector can be in front of the landmark.\n" << std::endl;
-    //    else
-    //        std::cout << "The trajector is not in front of the landmark.\n" << std::endl;
+    // Calculate the distance
+    _distanceInFront = pcl::euclideanDistance(_centerOfMassTrajector, _FCPoint);
 }
 
-void qsr::calculateAnglesBehind(){
+void qsr::calculateAnglesAndDistanceBehind(){
     // Left face direction
     Eigen::Vector4f rightDirection4f(_BLDPoint.x - _FRDPoint.x, _BLDPoint.y - _FRDPoint.y, 0, 0);
     Eigen::Vector3f rightDirection3f = rightDirection4f.segment(0,3);
@@ -253,13 +390,36 @@ void qsr::calculateAnglesBehind(){
     _angleLeftBehind = pcl::getAngle3D (leftCornerCenterLine4f, rightDirection4f);
     if(crossProductLeft(2)>0) _angleLeftBehind = 2*M_PI-_angleLeftBehind;
 
-    //    std::cout << "----------------- Behind -----------------" << std::endl;
-    //    std::cout << "Angle Right: " << pcl::rad2deg(angleRight) << std::endl;
-    //    std::cout << "Angle Left: " << pcl::rad2deg(angleLeft) << std::endl;
+    // Calculate the distance
+    _distanceBehind = pcl::euclideanDistance(_centerOfMassTrajector, _BCPoint);
+}
 
-    //    if(angleRight < M_PI/2 && angleLeft < M_PI/2)
-    //        std::cout << "The trajector can be behind the landmark.\n" << std::endl;
-    //    else
-    //        std::cout << "The trajector is not behind the landmark.\n\n\n\n" << std::endl;
+float qsr::angleFunction(float angle){
+    if(angle < M_PI/2) return 1.0;
+    else return 0.0;
+}
+
+float qsr::distanceFunction(float distance){
+    return 1;
+}
+
+float qsr::qsrOnRight(){
+    calculateAnglesAndDistanceOnRight();
+    return angleFunction(_angleRightOnRight)*angleFunction(_angleLeftOnRight)*distanceFunction(_distanceOnRight);
+}
+
+float qsr::qsrOnLeft(){
+    calculateAnglesAndDistanceOnLeft();
+    return angleFunction(_angleRightOnLeft)*angleFunction(_angleLeftOnLeft)*distanceFunction(_distanceOnLeft);
+}
+
+float qsr::qsrInFront(){
+    calculateAnglesAndDistanceInFront();
+    return angleFunction(_angleRightInFront)*angleFunction(_angleLeftInFront)*distanceFunction(_distanceInFront);
+}
+
+float qsr::qsrBehind(){
+    calculateAnglesAndDistanceBehind();
+    return angleFunction(_angleRightBehind)*angleFunction(_angleLeftBehind)*distanceFunction(_distanceBehind);
 }
 
