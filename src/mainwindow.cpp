@@ -5,6 +5,7 @@
 #include "initialmessagedialog.h"
 #include "filtervaluesdialog.h"
 #include "newobjectdialog.h"
+#include "qsr.h"
 
 #include "QMessageBox"
 #include "QFileDialog"
@@ -851,6 +852,21 @@ void MainWindow::on_actionDownsample_point_cloud_triggered()
 
     // Enable Undo function
     _ui->actionUndo->setEnabled(true);
+}
+
+void MainWindow::on_actionQSR_values_triggered()
+{
+    if(objectsInfo.numberOfObjects()>1){
+        qsr QSR(objectsInfo.getObjectList());
+        QSR.calculateQSROnRight();
+        QSR.calculateQSROnLeft();
+        QSR.calculateQSRInFront();
+        QSR.calculateQSRBehind();
+        //    QSR.test();
+    }
+    else QMessageBox::warning(this,
+                              "Error",
+                              "It is not possible to calculate the QSR values. Add more objects or load an annotation.");
 }
 
 //void MainWindow::on_actionSave_viewpoint_triggered()

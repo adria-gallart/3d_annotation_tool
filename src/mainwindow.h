@@ -126,6 +126,8 @@ private slots:
 
     void on_actionSave_PCD_and_export_objects_info_triggered();
 
+    void on_actionQSR_values_triggered();
+
 private:
     // The main window used
     Ui::MainWindow *_ui;
