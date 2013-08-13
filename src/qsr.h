@@ -17,6 +17,8 @@ public:
 
     void calculateQSRBehind();
 
+    void test();
+
 private:
     pcl::PointXYZ getCenterOfMass(object obj);
 
@@ -34,7 +36,7 @@ private:
 
     float angleFunction(float angle);
 
-    float distanceFunction(float distance);
+    float distanceFunction(float distance, float perimeter);
 
     float qsrOnRight();
 
@@ -52,6 +54,7 @@ private:
     float _angleRightOnLeft, _angleLeftOnLeft, _distanceOnLeft;
     float _angleRightInFront, _angleLeftInFront, _distanceInFront;
     float _angleRightBehind, _angleLeftBehind, _distanceBehind;
+    float _distanceThreshold;
 
     std::vector<object> _objectList;
 };

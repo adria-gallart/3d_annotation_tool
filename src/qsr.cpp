@@ -10,6 +10,7 @@
 qsr::qsr(std::vector<object> objectList)
 {
     _objectList = objectList;
+    _distanceThreshold = 1.5;
 }
 
 void qsr::calculateQSROnRight(){
@@ -394,32 +395,56 @@ void qsr::calculateAnglesAndDistanceBehind(){
     _distanceBehind = pcl::euclideanDistance(_centerOfMassTrajector, _BCPoint);
 }
 
+// Arreglar funcions al quadrat, etc.
 float qsr::angleFunction(float angle){
-    if(angle < M_PI/2) return 1.0;
-    else return 0.0;
+    if(angle >= 0 && angle < M_PI_2) return 1.0;
+    else if(angle >= M_PI_2 && angle < 2*M_PI/3) return 1-(36/(M_PI*M_PI))*(angle - M_PI_2)*(angle - M_PI_2);
+    else if(angle >= 2*M_PI/3 && angle < 11*M_PI/6) return 0.0;
+    else return 1 - (36/(M_PI*M_PI))*(angle - 2*M_PI)*(angle - 2*M_PI);
 }
 
-float qsr::distanceFunction(float distance){
-    return 1;
+float qsr::distanceFunction(float distance, float perimeter){
+    if(distance <= perimeter/2) return 1.0;
+    else if(distance <= 3*perimeter/4) return 1-(8/pow(perimeter,2))*(pow(distance-perimeter/2,2));
+    else return 0.5*pow((distance-3*perimeter/4)+1,-5);
+
+
+    //    if x <= width/2
+    //      y = 1;
+    //    elseif x <= 3*width/4
+    //        y = 1 - (8/(width^2))*((x-width/2)^2);
+    //    else
+    //      y = 0.5*((x-3*width/4)+1)^-0.3;
 }
 
 float qsr::qsrOnRight(){
     calculateAnglesAndDistanceOnRight();
-    return angleFunction(_angleRightOnRight)*angleFunction(_angleLeftOnRight)*distanceFunction(_distanceOnRight);
+    return angleFunction(_angleRightOnRight)*angleFunction(_angleLeftOnRight)*distanceFunction(_distanceOnRight, _distanceThreshold);
 }
 
 float qsr::qsrOnLeft(){
     calculateAnglesAndDistanceOnLeft();
-    return angleFunction(_angleRightOnLeft)*angleFunction(_angleLeftOnLeft)*distanceFunction(_distanceOnLeft);
+    return angleFunction(_angleRightOnLeft)*angleFunction(_angleLeftOnLeft)*distanceFunction(_distanceOnLeft, _distanceThreshold);
 }
 
 float qsr::qsrInFront(){
     calculateAnglesAndDistanceInFront();
-    return angleFunction(_angleRightInFront)*angleFunction(_angleLeftInFront)*distanceFunction(_distanceInFront);
+    return angleFunction(_angleRightInFront)*angleFunction(_angleLeftInFront)*distanceFunction(_distanceInFront, _distanceThreshold);
 }
 
 float qsr::qsrBehind(){
     calculateAnglesAndDistanceBehind();
-    return angleFunction(_angleRightBehind)*angleFunction(_angleLeftBehind)*distanceFunction(_distanceBehind);
+    return angleFunction(_angleRightBehind)*angleFunction(_angleLeftBehind)*distanceFunction(_distanceBehind, _distanceThreshold);
 }
 
+void qsr::test(){
+    //    float angle2;
+    //    for(float angle=0.0; angle <= 2*M_PI; angle+=M_PI_4/30){
+    //        if(pcl::rad2deg(angle) < 180) std::cout << pcl::rad2deg(angle) << " " << angleFunction(angle) << std::endl;
+    //        else std::cout << pcl::rad2deg(angle) - 360 << " " << angleFunction(angle) << std::endl;
+    //    }
+
+    for(float distance = 0.0; distance <= 2; distance+=0.01){
+        std::cout << distance << " " << distanceFunction(distance, 0.6) << std::endl;
+    }
+}
