@@ -8,6 +8,10 @@
 
 #include <string>
 
+#include <iostream>
+#include <fstream>
+#include <deque>
+
 class RGBDGrabber
 {
 
@@ -30,9 +34,17 @@ public:
     static std::string getDateTime();
 
 private:
-    volatile bool        m_bSaveOneFrame, m_bSaveFrameSequence, m_bCreateCVWindow;
-    int                  m_iSequenceNumber;
-    std::string          m_sCurrentFolder;
+    volatile bool                               m_bSaveOneFrame, m_bSaveFrameSequence, m_bCreateCVWindow, m_bLensCovered;
+    int                                         m_iSequenceNumber;
+    std::string                                 m_sCurrentFolder;
+    std::ofstream                               m_fIndexFile;
+    double                                      m_dLastTimestamp;
+    std::deque<std::pair<int, double> >         m_DepthSequenceAndTimestamp;
+    std::deque<std::pair<int, double> >         m_RGBSequenceAndTimestamp;
+    int                                         m_iImageSyncQueueLength;
+    double                                      m_dImageSyncTimout; // im seconds
+    double                                      m_dImageSyncBetweenFrames; // im seconds
+    double                                      m_dAvgPixelValueWhenLensCovered;
 };
 
 #endif // DATA_COMPRESION_NODE_HH

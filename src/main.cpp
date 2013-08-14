@@ -59,6 +59,7 @@ int main(int argc, char *argv[])
     ros::Rate loop_rate(10);
 
     bool loop = true;
+    std::cout<<"------------------------- RGBD_GRABBER started -----------------------------"<<std::endl;
     while (ros::ok() && loop)
     {
         int ch = keyPressed();
