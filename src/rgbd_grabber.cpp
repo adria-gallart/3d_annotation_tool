@@ -17,7 +17,8 @@
 using namespace std;
 
 RGBDGrabber::RGBDGrabber() : m_bSaveOneFrame(false), m_bSaveFrameSequence(false), m_bCreateCVWindow(false), m_bLensCovered(true),
-    m_iSequenceNumber(0), m_dLastTimestamp(0.0), m_iImageSyncQueueLength(10), m_dImageSyncTimout(2.0), m_dImageSyncBetweenFrames(0.02)
+    m_iSequenceNumber(0), m_dLastTimestamp(0.0), m_iImageSyncQueueLength(10), m_dImageSyncTimout(2.0), m_dImageSyncBetweenFrames(0.01),
+    m_iFrameSkip(0)
 {
     bool folderCreated = createNewFolder(); // to initialize m_sCurrentFolder (also to actually create the folder)
     if (!folderCreated)
@@ -100,6 +101,19 @@ void RGBDGrabber::colorImageCallback(const sensor_msgs::ImageConstPtr& imgMsg)
         if (frameSequenceNumber == -1)
         {
             cout<<"An error occured, cannot save depth image"<<endl;
+            return;
+        }
+
+        m_RGBSequenceAndTimestamp.push_back(std::make_pair(frameSequenceNumber,currentTimestamp));
+        if (m_RGBSequenceAndTimestamp.size() > m_iImageSyncQueueLength)
+        {
+            m_RGBSequenceAndTimestamp.pop_front(); // remove the oldest element from the queue
+        }
+
+        // check the frameskip value, skip the frame if necessary
+        if (!(frameSequenceNumber%(m_iFrameSkip+1)  == 0))
+        {
+            return;
         }
 
         char buffer[50];
@@ -130,11 +144,7 @@ void RGBDGrabber::colorImageCallback(const sensor_msgs::ImageConstPtr& imgMsg)
         std::cout<<"RGBDGrabber :: saved color file "<<buffer<<"   time stamp  "<<imgMsg->header.stamp<<std::endl;
 
         m_bSaveOneFrame = false;       
-        m_RGBSequenceAndTimestamp.push_back(std::make_pair(m_iSequenceNumber,currentTimestamp));
-        if (m_RGBSequenceAndTimestamp.size() > m_iImageSyncQueueLength)
-        {
-            m_RGBSequenceAndTimestamp.pop_front(); // remove the oldest element from the queue
-        }
+
 
     }
 
@@ -231,6 +241,20 @@ void RGBDGrabber::depthImageCallback(const sensor_msgs::ImageConstPtr& imgMsg)
         if (frameSequenceNumber == -1)
         {
             cout<<"An error occured, cannot save depth image"<<endl;
+            return;
+        }
+
+        m_DepthSequenceAndTimestamp.push_back(make_pair(frameSequenceNumber,imgMsg->header.stamp.toSec()));
+        if (m_DepthSequenceAndTimestamp.size() > m_iImageSyncQueueLength)
+        {
+            m_DepthSequenceAndTimestamp.pop_front(); // remove the oldest element from the queue
+        }
+
+        // check the frameskip value, skip the frame if necessary
+        if (!(frameSequenceNumber%(m_iFrameSkip+1) == 0))
+        {
+
+            return;
         }
 
         char buffer[50];
@@ -260,11 +284,7 @@ void RGBDGrabber::depthImageCallback(const sensor_msgs::ImageConstPtr& imgMsg)
         std::cout<<"RGBDGrabber :: saved depth file "<<buffer<<" pixel average  "<<avg<<"   time stamp  "<<imgMsg->header.stamp<<std::endl;
 
         m_bSaveOneFrame = false;
-        m_DepthSequenceAndTimestamp.push_back(make_pair(m_iSequenceNumber,imgMsg->header.stamp.toSec()));
-        if (m_DepthSequenceAndTimestamp.size() > m_iImageSyncQueueLength)
-        {
-            m_DepthSequenceAndTimestamp.pop_front(); // remove the oldest element from the queue
-        }
+
 
         m_dLastTimestamp = imgMsg->header.stamp.toSec();
     }
@@ -316,7 +336,16 @@ std::string RGBDGrabber::getFolderName()
 {
     return m_sCurrentFolder;
 }
-
+//---------------------------------------------------------------------------------------------
+void RGBDGrabber::setFrameSkip(const int& fs)
+{
+    if (fs >= 0)
+    {
+        m_iFrameSkip = fs;
+    } else {
+        cout<<"Cannot set frameskip as the value provided is negative "<<fs<<endl;
+    }
+}
 //---------------------------------------------------------------------------------------------
 std::string RGBDGrabber::getDateTime()
 {
@@ -329,5 +358,23 @@ std::string RGBDGrabber::getDateTime()
     strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &tstruct);
 
     return buf;
+}
+//---------------------------------------------------------------------------------------------
+int  RGBDGrabber::getFrameSkip()
+{
+    return m_iFrameSkip;
+}
+//---------------------------------------------------------------------------------------------
+void RGBDGrabber::increaseFrameSkip()
+{
+    m_iFrameSkip++;
+}
+//---------------------------------------------------------------------------------------------
+void RGBDGrabber::decreaseFrameSkip()
+{
+    if (m_iFrameSkip > 1)
+    {
+        m_iFrameSkip--;
+    }
 }
 //---------------------------------------------------------------------------------------------

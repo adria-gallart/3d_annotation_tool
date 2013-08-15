@@ -53,8 +53,8 @@ int main(int argc, char *argv[])
 
     ros::NodeHandle n;
 //    ros::Subscriber sub = n.subscribe("/camera/depth_registered/points", 2, &DataCompressionNode::pointCloudCallback, &dataCompressor);
-    ros::Subscriber sub2 = n.subscribe("/camera/rgb/image_color", 2, &RGBDGrabber::colorImageCallback, &grabber);
-    ros::Subscriber sub3 = n.subscribe("/camera/depth_registered/image_rect", 2, &RGBDGrabber::depthImageCallback, &grabber);
+    ros::Subscriber sub2 = n.subscribe("/camera/rgb/image_color", 10, &RGBDGrabber::colorImageCallback, &grabber);
+    ros::Subscriber sub3 = n.subscribe("/camera/depth_registered/image_rect", 10, &RGBDGrabber::depthImageCallback, &grabber);
 
     ros::Rate loop_rate(10);
 
@@ -64,6 +64,7 @@ int main(int argc, char *argv[])
     {
         int ch = keyPressed();
 
+//        std::cout<<ch<<std::endl;
         switch (ch)
         {
             case 113: // key q
@@ -96,6 +97,18 @@ int main(int argc, char *argv[])
                 grabber.createNewFolder();
                 std::string folderName = grabber.getFolderName();
                 std::cout<<"------------------------- Created new folder "<<folderName<<"-----------------------------"<<std::endl;
+                break;
+            }
+            case 105: // key i
+            {
+                grabber.increaseFrameSkip();
+                std::cout<<"------------------------- Frameskip increased to  "<<grabber.getFrameSkip()<<"-----------------------------"<<std::endl;
+                break;
+            }
+            case 117: // key u
+            {
+                grabber.decreaseFrameSkip();
+                std::cout<<"------------------------- Frameskip decreased to  "<<grabber.getFrameSkip()<<"-----------------------------"<<std::endl;
                 break;
             }
 

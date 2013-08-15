@@ -26,6 +26,10 @@ public:
 
     void setSaveOneFrame(const bool&);
     void setSaveFrameSeq(const bool&);
+    void setFrameSkip(const int&);
+    int  getFrameSkip();
+    void increaseFrameSkip();
+    void decreaseFrameSkip();
     std::string getFolderName();
 
     bool createNewFolder();
@@ -36,6 +40,7 @@ public:
 private:
     volatile bool                               m_bSaveOneFrame, m_bSaveFrameSequence, m_bCreateCVWindow, m_bLensCovered;
     int                                         m_iSequenceNumber;
+    int                                         m_iFrameSkip;
     std::string                                 m_sCurrentFolder;
     std::ofstream                               m_fIndexFile;
     double                                      m_dLastTimestamp;
