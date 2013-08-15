@@ -117,23 +117,7 @@ void RGBDGrabber::colorImageCallback(const sensor_msgs::ImageConstPtr& imgMsg)
         }
 
         char buffer[50];
-        if (frameSequenceNumber<10)
-        {
-            sprintf(buffer,"RGB000%d.png",frameSequenceNumber);
-        } else if (frameSequenceNumber<100)
-        {
-            sprintf(buffer,"RGB00%d.png",frameSequenceNumber);
-        } else if (frameSequenceNumber<1000)
-        {
-            sprintf(buffer,"RGB0%d.png",frameSequenceNumber);
-        } else if (frameSequenceNumber<10000)
-        {
-            sprintf(buffer,"RGB%d.png",frameSequenceNumber);
-        } else {
-            // saved the maximum number of images -> print an error and return
-            cout << "ERROR - cannot save image, already saved the maximum number of images."<<endl;
-            return;
-        }
+        sprintf(buffer,"RGB%010d.png",frameSequenceNumber);
 
         string completeName = m_sCurrentFolder + string("/") + string(buffer);
 
@@ -258,23 +242,7 @@ void RGBDGrabber::depthImageCallback(const sensor_msgs::ImageConstPtr& imgMsg)
         }
 
         char buffer[50];
-        if (frameSequenceNumber<10)
-        {
-            sprintf(buffer,"Depth000%d.png",frameSequenceNumber);
-        } else if (frameSequenceNumber<100)
-        {
-            sprintf(buffer,"Depth00%d.png",frameSequenceNumber);
-        } else if (frameSequenceNumber<1000)
-        {
-            sprintf(buffer,"Depth0%d.png",frameSequenceNumber);
-        } else if (frameSequenceNumber<10000)
-        {
-            sprintf(buffer,"Depth%d.png",frameSequenceNumber);
-        } else {
-            // saved the maximum number of images -> print an error and return
-            cout << "ERROR - cannot save image, already saved the maximum number of images."<<endl;
-            return;
-        }
+        sprintf(buffer,"Depth%010d.png",frameSequenceNumber);
 
         string completeName = m_sCurrentFolder + string("/") + string(buffer);
 
