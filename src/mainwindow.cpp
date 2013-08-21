@@ -5,6 +5,7 @@
 #include "initialmessagedialog.h"
 #include "filtervaluesdialog.h"
 #include "newobjectdialog.h"
+#include "qsr.h"
 
 #include "QMessageBox"
 #include "QFileDialog"
@@ -346,6 +347,7 @@ void MainWindow::on_actionAutomatic_plane_detection_triggered(){
         cloudModifier.automaticTableDetection(_cloud, _cloud);
         visualize();
         _cloudModified = true;
+        _ui->actionDesk_segmentation->setEnabled(true);
 
         // If the automatic detection of the plane is not correct, it can be
         // calculated manually by picking three points.
@@ -392,6 +394,7 @@ void MainWindow::on_actionManual_plane_definition_triggered(){
         // Manual plane definition of the desk plane and move to the plane x-y
         cloudModifier.manualTableDetection(_cloud, _cloud, tablePoints);
         _planeDefined = true;
+        _ui->actionDesk_segmentation->setEnabled(true);
         visualize();
         _cloudModified = true;
     }
@@ -849,6 +852,21 @@ void MainWindow::on_actionDownsample_point_cloud_triggered()
 
     // Enable Undo function
     _ui->actionUndo->setEnabled(true);
+}
+
+void MainWindow::on_actionQSR_values_triggered()
+{
+    if(objectsInfo.numberOfObjects()>1){
+        qsr QSR(objectsInfo.getObjectList());
+        QSR.calculateQSROnRight();
+        QSR.calculateQSROnLeft();
+        QSR.calculateQSRInFront();
+        QSR.calculateQSRBehind();
+        //    QSR.test();
+    }
+    else QMessageBox::warning(this,
+                              "Error",
+                              "It is not possible to calculate the QSR values. Add more objects or load an annotation.");
 }
 
 //void MainWindow::on_actionSave_viewpoint_triggered()
