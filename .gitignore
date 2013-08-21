@@ -1,0 +1,24 @@
+# Compiled source #
+###################
+
+# Packages #
+############
+
+
+# Logs and databases #
+######################
+
+
+# OS generated files #
+######################
+
+
+# Ignored Directories #
+#######################
+build/*
+bin/*
+
+
+# Temp Files #
+##############
+*~
