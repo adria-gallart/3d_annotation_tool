@@ -38,6 +38,10 @@ private:
 
     float distanceFunction(float distance, float perimeter);
 
+    float distanceFunction2(float distance, float perimeter);
+
+    float distanceFunction3(float distance, float perimeter);
+
     float qsrOnRight();
 
     float qsrOnLeft();
@@ -55,6 +59,7 @@ private:
     float _angleRightInFront, _angleLeftInFront, _distanceInFront;
     float _angleRightBehind, _angleLeftBehind, _distanceBehind;
     float _distanceThreshold;
+    float _perimeterLandmark;
 
     std::vector<object> _objectList;
 };

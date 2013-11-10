@@ -7,6 +7,8 @@
 #include <pcl/common/eigen.h>
 #include <pcl/common/angles.h>
 
+using namespace std;
+
 qsr::qsr(std::vector<object> objectList)
 {
     _objectList = objectList;
@@ -14,10 +16,10 @@ qsr::qsr(std::vector<object> objectList)
 }
 
 void qsr::calculateQSROnRight(){
-
     float values[_objectList.size()][_objectList.size()];
 
     // Calculate values
+    // **** Need to add that if the landmark is a Mouse or Mug do not calculate *****
     for(int i=0; i < _objectList.size(); i++){
         calculatePointsLandmark(_objectList[i]);
         for(int j=0; j < _objectList.size(); j++){
@@ -30,29 +32,61 @@ void qsr::calculateQSROnRight(){
     }
 
     // Print the table
-    std::cout << "------------------------------------------------" << std::endl;
-    std::cout << "----------On Right of---------------------------" << std::endl;
-    std::cout << "------------------------------------------------\n" << std::endl;
+    cout << "/////////////////////////" << endl;
+    cout << "/      On Right of      /" << endl;
+    cout << "/////////////////////////\n" << endl;
 
-    std::cout << std::setw(10) << "" << std::ends;
-    for(int i = 0; i < _objectList.size(); i++){
-        std::cout << std::setw(10) << _objectList[i].name.toStdString() << std::ends;
+    for(int i =0; i < _objectList.size()+1; i++){
+        cout << "|" << setw(10) << "----------" << ends;
     }
-    std::cout << std::endl;
+
+    cout << "|" << endl << "|" << setw(10) << "" << ends;
+    for(int i = 0; i < _objectList.size(); i++){
+        cout << "|" << setw(10) << _objectList[i].name.toStdString() << ends;
+    }
+
+    cout << "|" << endl;
+
+    for(int i =0; i < _objectList.size()+1; i++){
+        cout << "|" << setw(10) << "----------" << ends;
+    }
+
+    cout << "|" << endl;
 
     for(int i = 0; i < _objectList.size(); i++){
-        std::cout << std::setw(10) << std::left << _objectList[i].name.toStdString() << std::ends;
+        cout << "|" << setw(10) << right << _objectList[i].name.toStdString() << "|" << ends;
         for(int j = 0; j < _objectList.size(); j++){
-            if(i==j)std::cout << std::setw(10) << std::right << "X" << std::ends;
-            else std::cout << std::setw(10) << std::right << std::setprecision(2)  << values[i][j] << std::ends;
+            if(i==j) cout << setw(10) << right << "X" << "|" << ends;
+            else cout << setw(10) << right << setprecision(2)  << values[i][j] << "|" << ends;
         }
-        std::cout << std::endl;
+        cout << endl;
+
+        for(int i =0; i < _objectList.size()+1; i++){
+            cout << "|" << setw(10) << "----------" << ends;
+        }
+
+        cout << "|" << endl;
     }
-    std::cout << std::endl;
+
+    // Sense tocar el problema amb .txt
+    //    std::cout << std::setw(10) << "" << std::ends;
+    //    for(int i = 0; i < _objectList.size(); i++){
+    //        std::cout << std::setw(10) << _objectList[i].name.toStdString() << std::ends;
+    //    }
+    //    std::cout << std::endl;
+
+    //    for(int i = 0; i < _objectList.size(); i++){
+    //        std::cout << std::setw(10) << std::left << _objectList[i].name.toStdString() << std::ends;
+    //        for(int j = 0; j < _objectList.size(); j++){
+    //            if(i==j)std::cout << std::setw(10) << std::right << "X" << std::ends;
+    //            else std::cout << std::setw(10) << std::right << std::setprecision(2)  << values[i][j] << std::ends;
+    //        }
+    //        std::cout << std::endl;
+    //    }
+    //    std::cout << std::endl;
 }
 
 void qsr::calculateQSROnLeft(){
-
     float values[_objectList.size()][_objectList.size()];
 
     // Calculate values
@@ -68,25 +102,41 @@ void qsr::calculateQSROnLeft(){
     }
 
     // Print the table
-    std::cout << "------------------------------------------------" << std::endl;
-    std::cout << "----------On Left of----------------------------" << std::endl;
-    std::cout << "------------------------------------------------\n" << std::endl;
+    std::cout << "\n/////////////////////////" << std::endl;
+    std::cout << "/       On Left of      /" << std::endl;
+    std::cout << "/////////////////////////\n" << std::endl;
 
-    std::cout << std::setw(10) << "" << std::ends;
-    for(int i = 0; i < _objectList.size(); i++){
-        std::cout << std::setw(10) << _objectList[i].name.toStdString() << std::ends;
+    for(int i =0; i < _objectList.size()+1; i++){
+        cout << "|" << setw(10) << "----------" << ends;
     }
-    std::cout << std::endl;
+
+    cout << "|" << endl << "|" << setw(10) << "" << ends;
+    for(int i = 0; i < _objectList.size(); i++){
+        cout << "|" << setw(10) << _objectList[i].name.toStdString() << ends;
+    }
+
+    cout << "|" << endl;
+
+    for(int i =0; i < _objectList.size()+1; i++){
+        cout << "|" << setw(10) << "----------" << ends;
+    }
+
+    cout << "|" << endl;
 
     for(int i = 0; i < _objectList.size(); i++){
-        std::cout << std::setw(10) << std::left << _objectList[i].name.toStdString() << std::ends;
+        cout << "|" << setw(10) << right << _objectList[i].name.toStdString() << "|" << ends;
         for(int j = 0; j < _objectList.size(); j++){
-            if(i==j)std::cout << std::setw(10) << std::right << "X" << std::ends;
-            else std::cout << std::setw(10) << std::setprecision(2) << std::right << values[i][j] << std::ends;
+            if(i==j) cout << setw(10) << right << "X" << "|" << ends;
+            else cout << setw(10) << right << setprecision(2)  << values[i][j] << "|" << ends;
         }
-        std::cout << std::endl;
+        cout << endl;
+
+        for(int i =0; i < _objectList.size()+1; i++){
+            cout << "|" << setw(10) << "----------" << ends;
+        }
+
+        cout << "|" << endl;
     }
-    std::cout << std::endl;
 }
 
 void qsr::calculateQSRInFront(){
@@ -106,25 +156,41 @@ void qsr::calculateQSRInFront(){
     }
 
     // Print the table
-    std::cout << "------------------------------------------------" << std::endl;
-    std::cout << "----------In Front of---------------------------" << std::endl;
-    std::cout << "------------------------------------------------\n" << std::endl;
+    std::cout << "\n/////////////////////////" << std::endl;
+    std::cout << "/      In Front of      /" << std::endl;
+    std::cout << "/////////////////////////\n" << std::endl;
 
-    std::cout << std::setw(10) << "" << std::ends;
-    for(int i = 0; i < _objectList.size(); i++){
-        std::cout << std::setw(10) << _objectList[i].name.toStdString() << std::ends;
+    for(int i =0; i < _objectList.size()+1; i++){
+        cout << "|" << setw(10) << "----------" << ends;
     }
-    std::cout << std::endl;
+
+    cout << "|" << endl << "|" << setw(10) << "" << ends;
+    for(int i = 0; i < _objectList.size(); i++){
+        cout << "|" << setw(10) << _objectList[i].name.toStdString() << ends;
+    }
+
+    cout << "|" << endl;
+
+    for(int i =0; i < _objectList.size()+1; i++){
+        cout << "|" << setw(10) << "----------" << ends;
+    }
+
+    cout << "|" << endl;
 
     for(int i = 0; i < _objectList.size(); i++){
-        std::cout << std::setw(10) << std::left << _objectList[i].name.toStdString() << std::ends;
+        cout << "|" << setw(10) << right << _objectList[i].name.toStdString() << "|" << ends;
         for(int j = 0; j < _objectList.size(); j++){
-            if(i==j)std::cout << std::setw(10) << std::right << "X" << std::ends;
-            else std::cout << std::setw(10) << std::right << std::setprecision(2)  << values[i][j] << std::ends;
+            if(i==j) cout << setw(10) << right << "X" << "|" << ends;
+            else cout << setw(10) << right << setprecision(2)  << values[i][j] << "|" << ends;
         }
-        std::cout << std::endl;
+        cout << endl;
+
+        for(int i =0; i < _objectList.size()+1; i++){
+            cout << "|" << setw(10) << "----------" << ends;
+        }
+
+        cout << "|" << endl;
     }
-    std::cout << std::endl;
 }
 
 void qsr::calculateQSRBehind(){
@@ -144,25 +210,42 @@ void qsr::calculateQSRBehind(){
     }
 
     // Print the table
-    std::cout << "------------------------------------------------" << std::endl;
-    std::cout << "----------Behind of-----------------------------" << std::endl;
-    std::cout << "------------------------------------------------\n" << std::endl;
+    std::cout << "\n/////////////////////////" << std::endl;
+    std::cout << "/       Behind of       /" << std::endl;
+    std::cout << "/////////////////////////\n" << std::endl;
 
-    std::cout << std::setw(10) << "" << std::ends;
-    for(int i = 0; i < _objectList.size(); i++){
-        std::cout << std::setw(10) << _objectList[i].name.toStdString() << std::ends;
+    for(int i =0; i < _objectList.size()+1; i++){
+        cout << "|" << setw(10) << "----------" << ends;
     }
-    std::cout << std::endl;
+
+    cout << "|" << endl << "|" << setw(10) << "" << ends;
+    for(int i = 0; i < _objectList.size(); i++){
+        cout << "|" << setw(10) << _objectList[i].name.toStdString() << ends;
+    }
+
+    cout << "|" << endl;
+
+    for(int i =0; i < _objectList.size()+1; i++){
+        cout << "|" << setw(10) << "----------" << ends;
+    }
+
+    cout << "|" << endl;
 
     for(int i = 0; i < _objectList.size(); i++){
-        std::cout << std::setw(10) << std::left << _objectList[i].name.toStdString() << std::ends;
+        cout << "|" << setw(10) << right << _objectList[i].name.toStdString() << "|" << ends;
         for(int j = 0; j < _objectList.size(); j++){
-            if(i==j)std::cout << std::setw(10) << std::right << "X" << std::ends;
-            else std::cout << std::setw(10) << std::right << std::setprecision(2)  << values[i][j] << std::ends;
+            if(i==j) cout << setw(10) << right << "X" << "|" << ends;
+            else cout << setw(10) << right << setprecision(2)  << values[i][j] << "|" << ends;
         }
-        std::cout << std::endl;
+        cout << endl;
+
+        for(int i =0; i < _objectList.size()+1; i++){
+            cout << "|" << setw(10) << "----------" << ends;
+        }
+
+        cout << "|" << endl;
     }
-    std::cout << std::endl;
+    cout << endl;
 }
 
 pcl::PointXYZ qsr::getCenterOfMass(object obj){
@@ -240,6 +323,13 @@ void qsr::calculatePointsLandmark(object landmark){
     _BRDPoint.y = landmark.geometry.width;
     _BRDPoint.z = 0;
     _BRDPoint = pcl::transformPoint(_BRDPoint, transformationLandmark);
+
+    //*******************************
+    // Added after
+    //*****************************
+    // Calculate the perimeter of the landmark
+    _perimeterLandmark = 2*landmark.geometry.length + 2*landmark.geometry.width;
+    //    std::cout << "Perimeter " << landmark.name.toStdString() << " : " << _perimeterLandmark << " " << std::endl;
 }
 
 void qsr::calculatePointTrajector(object trajector){
@@ -403,38 +493,73 @@ float qsr::angleFunction(float angle){
     else return 1 - (36/(M_PI*M_PI))*(angle - 2*M_PI)*(angle - 2*M_PI);
 }
 
+// Distance function version 1. Piece wise function
 float qsr::distanceFunction(float distance, float perimeter){
     if(distance <= perimeter/2) return 1.0;
     else if(distance <= 3*perimeter/4) return 1-(8/pow(perimeter,2))*(pow(distance-perimeter/2,2));
     else return 0.5*pow((distance-3*perimeter/4)+1,-5);
+}
 
 
-    //    if x <= width/2
-    //      y = 1;
-    //    elseif x <= 3*width/4
-    //        y = 1 - (8/(width^2))*((x-width/2)^2);
-    //    else
-    //      y = 0.5*((x-3*width/4)+1)^-0.3;
+// Distance function version 2. Exponential function
+float qsr::distanceFunction2(float distance, float perimeter){
+    float factor;
+    // First set the factor depending on the perimeter of the object
+    if(perimeter < 0.4) factor = 0.2;
+    else if(perimeter >= 0.4 && perimeter < 0.8) factor = 0.4;
+    else if(perimeter >= 0.8 && perimeter < 1.2) factor = 0.6;
+    else if(perimeter > 1.2) factor = 0.8;
+
+    //    std::cout << "Distance: " << distance << " Factor: " << factor << " Distance function value: " << exp(-(distance/factor)*log(2)) << std::endl;
+    return exp(-(distance/factor)*log(2));
+}
+
+// Distance function version 3.
+float qsr::distanceFunction3(float distance, float perimeter){
+    float factor;
+    // First set the factor depending on the perimeter of the object
+    if(perimeter < 0.4) factor = 0.1;
+    else if(perimeter >= 0.4 && perimeter < 0.8) factor = 0.2;
+    else if(perimeter >= 0.8 && perimeter < 1.2) factor = 0.3;
+    else if(perimeter > 1.2) factor = 0.4;
+
+    //    std::cout << "Distance: " << distance << " Factor: " << factor << " Distance function value: " << exp(-(distance/factor)*log(2)) << std::endl;
+    if(distance < factor) return 1;
+    else return exp(-((distance-factor)/0.4)*log(2));
 }
 
 float qsr::qsrOnRight(){
     calculateAnglesAndDistanceOnRight();
-    return angleFunction(_angleRightOnRight)*angleFunction(_angleLeftOnRight)*distanceFunction(_distanceOnRight, _distanceThreshold);
+    //    return angleFunction(_angleRightOnRight)*angleFunction(_angleLeftOnRight)*distanceFunction(_distanceOnRight, _distanceThreshold);
+    //    return angleFunction(_angleRightOnRight)*angleFunction(_angleLeftOnRight)*distanceFunction2(_distanceOnRight, _perimeterLandmark);
+    //    std::cout << "On right of: " << "angle1: " << pcl::rad2deg(_angleRightOnRight) << " angle2: " << pcl::rad2deg(_angleLeftOnRight) << " distance: " << _distanceOnRight << std::endl;
+    //    std::cout << "Function values. g(angle1): " << angleFunction(_angleRightOnRight) << " g(angle2): " << angleFunction(_angleLeftOnRight) << " f(distance): " << distanceFunction3(_distanceOnRight, _perimeterLandmark) << std::endl;
+    //    std::cout << "Final value:" << angleFunction(_angleRightOnRight)*angleFunction(_angleLeftOnRight)*distanceFunction3(_distanceOnRight, _perimeterLandmark) << std::endl;
+    return angleFunction(_angleRightOnRight)*angleFunction(_angleLeftOnRight)*distanceFunction3(_distanceOnRight, _perimeterLandmark);
 }
 
 float qsr::qsrOnLeft(){
     calculateAnglesAndDistanceOnLeft();
-    return angleFunction(_angleRightOnLeft)*angleFunction(_angleLeftOnLeft)*distanceFunction(_distanceOnLeft, _distanceThreshold);
+//    return angleFunction(_angleRightOnLeft)*angleFunction(_angleLeftOnLeft)*distanceFunction(_distanceOnLeft, _distanceThreshold);
+//    return angleFunction(_angleRightOnLeft)*angleFunction(_angleLeftOnLeft)*distanceFunction2(_distanceOnLeft, _perimeterLandmark);
+    return angleFunction(_angleRightOnLeft)*angleFunction(_angleLeftOnLeft)*distanceFunction3(_distanceOnLeft, _perimeterLandmark);
 }
 
 float qsr::qsrInFront(){
     calculateAnglesAndDistanceInFront();
-    return angleFunction(_angleRightInFront)*angleFunction(_angleLeftInFront)*distanceFunction(_distanceInFront, _distanceThreshold);
+    //    return angleFunction(_angleRightInFront)*angleFunction(_angleLeftInFront)*distanceFunction(_distanceInFront, _distanceThreshold);
+    //    return angleFunction(_angleRightInFront)*angleFunction(_angleLeftInFront)*distanceFunction2(_distanceInFront, _perimeterLandmark);
+    //    std::cout << "In front of: " << "angle1: " << pcl::rad2deg(_angleRightInFront) << " angle2: " << pcl::rad2deg(_angleLeftInFront) << " distance: " << _distanceInFront << std::endl;
+    //    std::cout << "Function values. g(angle1): " << angleFunction(_angleRightInFront) << " g(angle2): " << angleFunction(_angleLeftInFront) << " f(distance): " << distanceFunction3(_distanceInFront, _perimeterLandmark) << std::endl;
+    //    std::cout << "Final value: " << angleFunction(_angleRightInFront)*angleFunction(_angleLeftInFront)*distanceFunction3(_distanceInFront, _perimeterLandmark) << std::endl;
+    return angleFunction(_angleRightInFront)*angleFunction(_angleLeftInFront)*distanceFunction3(_distanceInFront, _perimeterLandmark);
 }
 
 float qsr::qsrBehind(){
     calculateAnglesAndDistanceBehind();
-    return angleFunction(_angleRightBehind)*angleFunction(_angleLeftBehind)*distanceFunction(_distanceBehind, _distanceThreshold);
+    //    return angleFunction(_angleRightBehind)*angleFunction(_angleLeftBehind)*distanceFunction(_distanceBehind, _distanceThreshold);
+    //    return angleFunction(_angleRightBehind)*angleFunction(_angleLeftBehind)*distanceFunction2(_distanceBehind, _perimeterLandmark);
+    return angleFunction(_angleRightBehind)*angleFunction(_angleLeftBehind)*distanceFunction3(_distanceBehind, _perimeterLandmark);
 }
 
 void qsr::test(){
@@ -445,6 +570,6 @@ void qsr::test(){
     //    }
 
     for(float distance = 0.0; distance <= 2; distance+=0.01){
-        std::cout << distance << " " << distanceFunction(distance, 0.6) << std::endl;
+        std::cout << distance << " " << distanceFunction3(distance, 0.3) << " " << distanceFunction3(distance, 0.5)<< " " << distanceFunction3(distance, 0.9)<< " " << distanceFunction3(distance, 1.3) << std::endl;
     }
 }

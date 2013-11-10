@@ -862,36 +862,12 @@ void MainWindow::on_actionQSR_values_triggered()
         QSR.calculateQSROnLeft();
         QSR.calculateQSRInFront();
         QSR.calculateQSRBehind();
-        //    QSR.test();
+        //        QSR.test();
     }
     else QMessageBox::warning(this,
                               "Error",
                               "It is not possible to calculate the QSR values. Add more objects or load an annotation.");
 }
-
-//void MainWindow::on_actionSave_viewpoint_triggered()
-//{
-//    std::vector<pcl::visualization::Camera> cameras;
-//    _viewPose = viewInteractor.getCameraParametersAndPose(cameras);
-//    _camera = cameras[0];
-
-//    std::cout << "Number of cameras: " << cameras.size() << std::endl;
-//    std::cout << "Camera pose: x: " << cameras[0].pos[0]
-//              << " y: " << cameras[0].pos[1]
-//              << " z: " << cameras[0].pos[2] << std::endl;
-//    std::cout << "Camera view: x: " << cameras[0].view[0]
-//              << " y: " << cameras[0].view[1]
-//              << " z: " << cameras[0].view[2] << std::endl;
-//}
-
-//void MainWindow::on_actionLoad_viewpoint_triggered()
-//{
-//    viewInteractor.setCameraPose(_camera.pos[0], _camera.pos[1], _camera.pos[2],
-//                                 0, 0, 0,
-//                                 _camera.view[0], _camera.view[0], _camera.view[0]);
-
-//    std::cout << _viewPose(0,1) << "  " << _viewPose(1,0) << "  " << _viewPose(2,0) << std::endl;
-//}
 
 ///////////////////////////////////////////////////////
 // The following functions are used inside the above //
