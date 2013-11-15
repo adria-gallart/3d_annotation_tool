@@ -1321,6 +1321,7 @@
     <property name="title">
      <string>QSR</string>
     </property>
+    <addaction name="actionDescription_of_scene_using_QSR"/>
     <addaction name="actionQSR_values"/>
    </widget>
    <addaction name="menuFile"/>
@@ -1718,7 +1719,12 @@
   </action>
   <action name="actionQSR_values">
    <property name="text">
-    <string>QSR values</string>
+    <string>QSR values (displayed terminal)</string>
+   </property>
+  </action>
+  <action name="actionDescription_of_scene_using_QSR">
+   <property name="text">
+    <string>Description of scene using QSR</string>
    </property>
   </action>
  </widget>

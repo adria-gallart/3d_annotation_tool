@@ -869,6 +869,23 @@ void MainWindow::on_actionQSR_values_triggered()
                               "It is not possible to calculate the QSR values. Add more objects or load an annotation.");
 }
 
+void MainWindow::on_actionDescription_of_scene_using_QSR_triggered()
+{
+    if(objectsInfo.numberOfObjects()>2){
+        qsr QSR(objectsInfo.getObjectList());
+        QString description = QSR.getDescription();
+        //        std::cout << description.toStdString() << std::endl;
+
+        QMessageBox::information(this,
+                                 "Description of the scene",
+                                 description);
+
+    }
+    else QMessageBox::warning(this,
+                              "Error",
+                              "It is not possible to obtain a description of the scene. Annotate some objects or load an annotation.");
+}
+
 ///////////////////////////////////////////////////////
 // The following functions are used inside the above //
 // functions (slots)                                 //
