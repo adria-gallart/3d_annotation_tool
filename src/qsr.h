@@ -19,6 +19,8 @@ public:
 
     void test();
 
+    QString getDescription();
+
 private:
     pcl::PointXYZ getCenterOfMass(object obj);
 
@@ -38,10 +40,6 @@ private:
 
     float distanceFunction(float distance, float perimeter);
 
-    float distanceFunction2(float distance, float perimeter);
-
-    float distanceFunction3(float distance, float perimeter);
-
     float qsrOnRight();
 
     float qsrOnLeft();
@@ -50,6 +48,7 @@ private:
 
     float qsrBehind();
 
+    // I need to explain what is the meaning of each point.
     pcl::PointXYZ _FLDPoint, _FRDPoint, _BRDPoint, _BLDPoint;
     pcl::PointXYZ _FCPoint, _RCPoint, _BCPoint, _LCPoint;
     pcl::PointXYZ _centerOfMassTrajector;

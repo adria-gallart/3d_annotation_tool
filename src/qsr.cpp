@@ -15,6 +15,9 @@ qsr::qsr(std::vector<object> objectList)
     _distanceThreshold = 1.5;
 }
 
+
+// This function calculate all the values for the relations right of
+// and display its results in the terminal
 void qsr::calculateQSROnRight(){
     float values[_objectList.size()][_objectList.size()];
 
@@ -35,6 +38,9 @@ void qsr::calculateQSROnRight(){
     cout << "/////////////////////////" << endl;
     cout << "/      On Right of      /" << endl;
     cout << "/////////////////////////\n" << endl;
+
+    // Needed to make a function to generalize the printing on the terminal for the different relations.
+    // To do not lose time in implementing it has been copy and paste in the other functions.
 
     for(int i =0; i < _objectList.size()+1; i++){
         cout << "|" << setw(10) << "----------" << ends;
@@ -67,25 +73,10 @@ void qsr::calculateQSROnRight(){
 
         cout << "|" << endl;
     }
-
-    // Sense tocar el problema amb .txt
-    //    std::cout << std::setw(10) << "" << std::ends;
-    //    for(int i = 0; i < _objectList.size(); i++){
-    //        std::cout << std::setw(10) << _objectList[i].name.toStdString() << std::ends;
-    //    }
-    //    std::cout << std::endl;
-
-    //    for(int i = 0; i < _objectList.size(); i++){
-    //        std::cout << std::setw(10) << std::left << _objectList[i].name.toStdString() << std::ends;
-    //        for(int j = 0; j < _objectList.size(); j++){
-    //            if(i==j)std::cout << std::setw(10) << std::right << "X" << std::ends;
-    //            else std::cout << std::setw(10) << std::right << std::setprecision(2)  << values[i][j] << std::ends;
-    //        }
-    //        std::cout << std::endl;
-    //    }
-    //    std::cout << std::endl;
 }
 
+// This function calculate all the values for the relations left of
+// and display its results in the terminal
 void qsr::calculateQSROnLeft(){
     float values[_objectList.size()][_objectList.size()];
 
@@ -139,6 +130,9 @@ void qsr::calculateQSROnLeft(){
     }
 }
 
+
+// This function calculate all the values for the relations front of
+// and display its results in the terminal
 void qsr::calculateQSRInFront(){
 
     float values[_objectList.size()][_objectList.size()];
@@ -193,6 +187,8 @@ void qsr::calculateQSRInFront(){
     }
 }
 
+// This function calculate all the values for the relations behind of
+// and display its results in the terminal
 void qsr::calculateQSRBehind(){
 
     float values[_objectList.size()][_objectList.size()];
@@ -248,6 +244,7 @@ void qsr::calculateQSRBehind(){
     cout << endl;
 }
 
+// Calculate the center of mass of an object as the centroid of the bounding box
 pcl::PointXYZ qsr::getCenterOfMass(object obj){
     pcl::PointXYZ centerOfMass;
     centerOfMass.x = obj.geometry.length/2;
@@ -266,6 +263,7 @@ pcl::PointXYZ qsr::getCenterOfMass(object obj){
     return centerOfMass;
 }
 
+// Calculate the needed parameters of the landmark.
 void qsr::calculatePointsLandmark(object landmark){
     // Firstly, get the transformation of the landmark
     Eigen::Affine3f transformationLandmark = pcl::getTransformation (landmark.geometry.pose.x,
@@ -324,18 +322,16 @@ void qsr::calculatePointsLandmark(object landmark){
     _BRDPoint.z = 0;
     _BRDPoint = pcl::transformPoint(_BRDPoint, transformationLandmark);
 
-    //*******************************
-    // Added after
-    //*****************************
     // Calculate the perimeter of the landmark
     _perimeterLandmark = 2*landmark.geometry.length + 2*landmark.geometry.width;
-    //    std::cout << "Perimeter " << landmark.name.toStdString() << " : " << _perimeterLandmark << " " << std::endl;
 }
 
+// Calculate the needed parameters for the trajector
 void qsr::calculatePointTrajector(object trajector){
     _centerOfMassTrajector = getCenterOfMass(trajector);
 }
 
+// Calculation of angles and distance for the relation right of
 void qsr::calculateAnglesAndDistanceOnRight(){
     // Front face direction
     Eigen::Vector4f frontDirection4f(_FRDPoint.x - _FLDPoint.x, _FRDPoint.y - _FLDPoint.y, 0, 0);
@@ -374,6 +370,7 @@ void qsr::calculateAnglesAndDistanceOnRight(){
     _distanceOnRight = pcl::euclideanDistance(_centerOfMassTrajector, _RCPoint);
 }
 
+// Calculation of angles and distance for the relation left of
 void qsr::calculateAnglesAndDistanceOnLeft(){
     // Front face direction
     Eigen::Vector4f backDirection4f(_BRDPoint.x - _BLDPoint.x, _BRDPoint.y - _BLDPoint.y, 0, 0);
@@ -411,6 +408,7 @@ void qsr::calculateAnglesAndDistanceOnLeft(){
     _distanceOnLeft = pcl::euclideanDistance(_centerOfMassTrajector, _LCPoint);
 }
 
+// Calculation of angles and distance for the relation in front
 void qsr::calculateAnglesAndDistanceInFront(){
     // Left face direction
     Eigen::Vector4f leftDirection4f(_FLDPoint.x - _BRDPoint.x, _FLDPoint.y - _BRDPoint.y, 0, 0);
@@ -448,6 +446,7 @@ void qsr::calculateAnglesAndDistanceInFront(){
     _distanceInFront = pcl::euclideanDistance(_centerOfMassTrajector, _FCPoint);
 }
 
+// Calculation of angles and distance for the relation behind
 void qsr::calculateAnglesAndDistanceBehind(){
     // Left face direction
     Eigen::Vector4f rightDirection4f(_BLDPoint.x - _FRDPoint.x, _BLDPoint.y - _FRDPoint.y, 0, 0);
@@ -485,7 +484,8 @@ void qsr::calculateAnglesAndDistanceBehind(){
     _distanceBehind = pcl::euclideanDistance(_centerOfMassTrajector, _BCPoint);
 }
 
-// Arreglar funcions al quadrat, etc.
+// Angle function
+// Maybe is too much restrictive. Needed to anylize human behaviour when looking for a relation
 float qsr::angleFunction(float angle){
     if(angle >= 0 && angle < M_PI_2) return 1.0;
     else if(angle >= M_PI_2 && angle < 2*M_PI/3) return 1-(36/(M_PI*M_PI))*(angle - M_PI_2)*(angle - M_PI_2);
@@ -493,73 +493,45 @@ float qsr::angleFunction(float angle){
     else return 1 - (36/(M_PI*M_PI))*(angle - 2*M_PI)*(angle - 2*M_PI);
 }
 
-// Distance function version 1. Piece wise function
+
+// Distance function version
 float qsr::distanceFunction(float distance, float perimeter){
-    if(distance <= perimeter/2) return 1.0;
-    else if(distance <= 3*perimeter/4) return 1-(8/pow(perimeter,2))*(pow(distance-perimeter/2,2));
-    else return 0.5*pow((distance-3*perimeter/4)+1,-5);
-}
-
-
-// Distance function version 2. Exponential function
-float qsr::distanceFunction2(float distance, float perimeter){
     float factor;
-    // First set the factor depending on the perimeter of the object
-    if(perimeter < 0.4) factor = 0.2;
-    else if(perimeter >= 0.4 && perimeter < 0.8) factor = 0.4;
-    else if(perimeter >= 0.8 && perimeter < 1.2) factor = 0.6;
-    else if(perimeter > 1.2) factor = 0.8;
 
-    //    std::cout << "Distance: " << distance << " Factor: " << factor << " Distance function value: " << exp(-(distance/factor)*log(2)) << std::endl;
-    return exp(-(distance/factor)*log(2));
-}
-
-// Distance function version 3.
-float qsr::distanceFunction3(float distance, float perimeter){
-    float factor;
-    // First set the factor depending on the perimeter of the object
+    // For small objects the distance function is more restrictive
     if(perimeter < 0.4) factor = 0.1;
-    else if(perimeter >= 0.4 && perimeter < 0.8) factor = 0.2;
-    else if(perimeter >= 0.8 && perimeter < 1.2) factor = 0.3;
-    else if(perimeter > 1.2) factor = 0.4;
+    else factor = 0.2;
 
-    //    std::cout << "Distance: " << distance << " Factor: " << factor << " Distance function value: " << exp(-(distance/factor)*log(2)) << std::endl;
     if(distance < factor) return 1;
     else return exp(-((distance-factor)/0.4)*log(2));
 }
 
 float qsr::qsrOnRight(){
     calculateAnglesAndDistanceOnRight();
-    //    return angleFunction(_angleRightOnRight)*angleFunction(_angleLeftOnRight)*distanceFunction(_distanceOnRight, _distanceThreshold);
-    //    return angleFunction(_angleRightOnRight)*angleFunction(_angleLeftOnRight)*distanceFunction2(_distanceOnRight, _perimeterLandmark);
     //    std::cout << "On right of: " << "angle1: " << pcl::rad2deg(_angleRightOnRight) << " angle2: " << pcl::rad2deg(_angleLeftOnRight) << " distance: " << _distanceOnRight << std::endl;
-    //    std::cout << "Function values. g(angle1): " << angleFunction(_angleRightOnRight) << " g(angle2): " << angleFunction(_angleLeftOnRight) << " f(distance): " << distanceFunction3(_distanceOnRight, _perimeterLandmark) << std::endl;
-    //    std::cout << "Final value:" << angleFunction(_angleRightOnRight)*angleFunction(_angleLeftOnRight)*distanceFunction3(_distanceOnRight, _perimeterLandmark) << std::endl;
-    return angleFunction(_angleRightOnRight)*angleFunction(_angleLeftOnRight)*distanceFunction3(_distanceOnRight, _perimeterLandmark);
+    //    std::cout << "Function values. g(angle1): " << angleFunction(_angleRightOnRight) << " g(angle2): " << angleFunction(_angleLeftOnRight) << " f(distance): " << distanceFunction(_distanceOnRight, _perimeterLandmark) << std::endl;
+    //    std::cout << "Final value:" << angleFunction(_angleRightOnRight)*angleFunction(_angleLeftOnRight)*distanceFunction(_distanceOnRight, _perimeterLandmark) << std::endl;
+    return angleFunction(_angleRightOnRight)*angleFunction(_angleLeftOnRight)*distanceFunction(_distanceOnRight, _perimeterLandmark);
 }
 
 float qsr::qsrOnLeft(){
     calculateAnglesAndDistanceOnLeft();
-//    return angleFunction(_angleRightOnLeft)*angleFunction(_angleLeftOnLeft)*distanceFunction(_distanceOnLeft, _distanceThreshold);
-//    return angleFunction(_angleRightOnLeft)*angleFunction(_angleLeftOnLeft)*distanceFunction2(_distanceOnLeft, _perimeterLandmark);
-    return angleFunction(_angleRightOnLeft)*angleFunction(_angleLeftOnLeft)*distanceFunction3(_distanceOnLeft, _perimeterLandmark);
+    //    std::cout << "On left of: " << "angle1: " << pcl::rad2deg(_angleRightOnLeft) << " angle2: " << pcl::rad2deg(_angleLeftOnLeft) << " distance: " << _distanceOnLeft << std::endl;
+    //    std::cout << "Final value:" << angleFunction(_angleRightOnLeft)*angleFunction(_angleLeftOnLeft)*distanceFunction(_distanceOnLeft, _perimeterLandmark) << std::endl;
+    return angleFunction(_angleRightOnLeft)*angleFunction(_angleLeftOnLeft)*distanceFunction(_distanceOnLeft, _perimeterLandmark);
 }
 
 float qsr::qsrInFront(){
     calculateAnglesAndDistanceInFront();
-    //    return angleFunction(_angleRightInFront)*angleFunction(_angleLeftInFront)*distanceFunction(_distanceInFront, _distanceThreshold);
-    //    return angleFunction(_angleRightInFront)*angleFunction(_angleLeftInFront)*distanceFunction2(_distanceInFront, _perimeterLandmark);
     //    std::cout << "In front of: " << "angle1: " << pcl::rad2deg(_angleRightInFront) << " angle2: " << pcl::rad2deg(_angleLeftInFront) << " distance: " << _distanceInFront << std::endl;
-    //    std::cout << "Function values. g(angle1): " << angleFunction(_angleRightInFront) << " g(angle2): " << angleFunction(_angleLeftInFront) << " f(distance): " << distanceFunction3(_distanceInFront, _perimeterLandmark) << std::endl;
-    //    std::cout << "Final value: " << angleFunction(_angleRightInFront)*angleFunction(_angleLeftInFront)*distanceFunction3(_distanceInFront, _perimeterLandmark) << std::endl;
-    return angleFunction(_angleRightInFront)*angleFunction(_angleLeftInFront)*distanceFunction3(_distanceInFront, _perimeterLandmark);
+    //    std::cout << "Function values. g(angle1): " << angleFunction(_angleRightInFront) << " g(angle2): " << angleFunction(_angleLeftInFront) << " f(distance): " << distanceFunction(_distanceInFront, _perimeterLandmark) << std::endl;
+    //    std::cout << "Final value: " << angleFunction(_angleRightInFront)*angleFunction(_angleLeftInFront)*distanceFunction(_distanceInFront, _perimeterLandmark) << std::endl;
+    return angleFunction(_angleRightInFront)*angleFunction(_angleLeftInFront)*distanceFunction(_distanceInFront, _perimeterLandmark);
 }
 
 float qsr::qsrBehind(){
     calculateAnglesAndDistanceBehind();
-    //    return angleFunction(_angleRightBehind)*angleFunction(_angleLeftBehind)*distanceFunction(_distanceBehind, _distanceThreshold);
-    //    return angleFunction(_angleRightBehind)*angleFunction(_angleLeftBehind)*distanceFunction2(_distanceBehind, _perimeterLandmark);
-    return angleFunction(_angleRightBehind)*angleFunction(_angleLeftBehind)*distanceFunction3(_distanceBehind, _perimeterLandmark);
+    return angleFunction(_angleRightBehind)*angleFunction(_angleLeftBehind)*distanceFunction(_distanceBehind, _perimeterLandmark);
 }
 
 void qsr::test(){
@@ -570,6 +542,73 @@ void qsr::test(){
     //    }
 
     for(float distance = 0.0; distance <= 2; distance+=0.01){
-        std::cout << distance << " " << distanceFunction3(distance, 0.3) << " " << distanceFunction3(distance, 0.5)<< " " << distanceFunction3(distance, 0.9)<< " " << distanceFunction3(distance, 1.3) << std::endl;
+        std::cout << distance << " " << distanceFunction(distance, 0.3) << " " << distanceFunction(distance, 0.5) <<  std::endl;
     }
+}
+
+QString qsr::getDescription(){
+    float values[_objectList.size()][_objectList.size()];
+    stringstream ss;
+
+    // Improve it not doing all the loops.
+
+    // Right of
+    for(int i=0; i < _objectList.size(); i++){
+        calculatePointsLandmark(_objectList[i]);
+        for(int j=0; j < _objectList.size(); j++){
+            if(j == i) values[j][i] = -1;
+            else{
+                calculatePointTrajector(_objectList[j]);
+                values[j][i] = qsrOnRight();
+            }
+            if(values[j][i] >= 0.5 && ( _objectList[i].name.toStdString() != "mug" && _objectList[i].name.toStdString() != "mouse" &&  _objectList[i].name.toStdString() != "Mouse" &&  _objectList[i].name.toStdString() != "Mug")){
+                ss << "- The " << _objectList[j].name.toStdString() << " is to the right of the " << _objectList[i].name.toStdString() << "." << endl << endl;
+            }
+        }
+    }
+
+    // Left of
+    for(int i=0; i < _objectList.size(); i++){
+        calculatePointsLandmark(_objectList[i]);
+        for(int j=0; j < _objectList.size(); j++){
+            if(j == i) values[j][i] = -1;
+            else{
+                calculatePointTrajector(_objectList[j]);
+                values[j][i] = qsrOnLeft();
+            }
+            if(values[j][i] >= 0.5 && ( _objectList[i].name.toStdString() != "mug" && _objectList[i].name.toStdString() != "mouse" &&  _objectList[i].name.toStdString() != "Mouse" &&  _objectList[i].name.toStdString() != "Mug")){
+                ss << "- The " << _objectList[j].name.toStdString() << " is to the left of the " << _objectList[i].name.toStdString() << "." << endl << endl;
+            }
+        }
+    }
+    // In front
+    for(int i=0; i < _objectList.size(); i++){
+        calculatePointsLandmark(_objectList[i]);
+        for(int j=0; j < _objectList.size(); j++){
+            if(j == i) values[j][i] = -1;
+            else{
+                calculatePointTrajector(_objectList[j]);
+                values[j][i] = qsrInFront();
+            }
+            if(values[j][i] >= 0.5 && ( _objectList[i].name.toStdString() != "mug" && _objectList[i].name.toStdString() != "mouse" &&  _objectList[i].name.toStdString() != "Mouse" &&  _objectList[i].name.toStdString() != "Mug")){
+                ss << "- The " << _objectList[j].name.toStdString() << " is in front of the " << _objectList[i].name.toStdString() << "." << endl << endl;
+            }
+        }
+    }
+    // Behind
+    for(int i=0; i < _objectList.size(); i++){
+        calculatePointsLandmark(_objectList[i]);
+        for(int j=0; j < _objectList.size(); j++){
+            if(j == i) values[j][i] = -1;
+            else{
+                calculatePointTrajector(_objectList[j]);
+                values[j][i] = qsrBehind();
+            }
+            if(values[j][i] >= 0.5 && ( _objectList[i].name.toStdString() != "mug" && _objectList[i].name.toStdString() != "mouse" &&  _objectList[i].name.toStdString() != "Mouse" &&  _objectList[i].name.toStdString() != "Mug")){
+                ss << "- The " << _objectList[j].name.toStdString() << " is behind the " << _objectList[i].name.toStdString() << "." << endl << endl;
+            }
+        }
+    }
+
+    return QString::fromStdString(ss.str());
 }
