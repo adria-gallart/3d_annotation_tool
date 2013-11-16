@@ -34,45 +34,11 @@ void qsr::calculateQSROnRight(){
         }
     }
 
-    // Print the table
-    cout << "/////////////////////////" << endl;
-    cout << "/      On Right of      /" << endl;
-    cout << "/////////////////////////\n" << endl;
+    stringstream ss2;
 
-    // Needed to make a function to generalize the printing on the terminal for the different relations.
-    // To do not lose time in implementing it has been copy and paste in the other functions.
+    getStringStream(&values[0][0], ss2, "Right");
 
-    for(int i =0; i < _objectList.size()+1; i++){
-        cout << "|" << setw(10) << "----------" << ends;
-    }
-
-    cout << "|" << endl << "|" << setw(10) << "" << ends;
-    for(int i = 0; i < _objectList.size(); i++){
-        cout << "|" << setw(10) << _objectList[i].name.toStdString() << ends;
-    }
-
-    cout << "|" << endl;
-
-    for(int i =0; i < _objectList.size()+1; i++){
-        cout << "|" << setw(10) << "----------" << ends;
-    }
-
-    cout << "|" << endl;
-
-    for(int i = 0; i < _objectList.size(); i++){
-        cout << "|" << setw(10) << right << _objectList[i].name.toStdString() << "|" << ends;
-        for(int j = 0; j < _objectList.size(); j++){
-            if(i==j) cout << setw(10) << right << "X" << "|" << ends;
-            else cout << setw(10) << right << setprecision(2)  << values[i][j] << "|" << ends;
-        }
-        cout << endl;
-
-        for(int i =0; i < _objectList.size()+1; i++){
-            cout << "|" << setw(10) << "----------" << ends;
-        }
-
-        cout << "|" << endl;
-    }
+    cout << ss2.str() << endl;
 }
 
 // This function calculate all the values for the relations left of
@@ -92,42 +58,11 @@ void qsr::calculateQSROnLeft(){
         }
     }
 
-    // Print the table
-    std::cout << "\n/////////////////////////" << std::endl;
-    std::cout << "/       On Left of      /" << std::endl;
-    std::cout << "/////////////////////////\n" << std::endl;
+    stringstream ss2;
 
-    for(int i =0; i < _objectList.size()+1; i++){
-        cout << "|" << setw(10) << "----------" << ends;
-    }
+    getStringStream(&values[0][0], ss2, "Left");
 
-    cout << "|" << endl << "|" << setw(10) << "" << ends;
-    for(int i = 0; i < _objectList.size(); i++){
-        cout << "|" << setw(10) << _objectList[i].name.toStdString() << ends;
-    }
-
-    cout << "|" << endl;
-
-    for(int i =0; i < _objectList.size()+1; i++){
-        cout << "|" << setw(10) << "----------" << ends;
-    }
-
-    cout << "|" << endl;
-
-    for(int i = 0; i < _objectList.size(); i++){
-        cout << "|" << setw(10) << right << _objectList[i].name.toStdString() << "|" << ends;
-        for(int j = 0; j < _objectList.size(); j++){
-            if(i==j) cout << setw(10) << right << "X" << "|" << ends;
-            else cout << setw(10) << right << setprecision(2)  << values[i][j] << "|" << ends;
-        }
-        cout << endl;
-
-        for(int i =0; i < _objectList.size()+1; i++){
-            cout << "|" << setw(10) << "----------" << ends;
-        }
-
-        cout << "|" << endl;
-    }
+    cout << ss2.str() << endl;
 }
 
 
@@ -149,42 +84,11 @@ void qsr::calculateQSRInFront(){
         }
     }
 
-    // Print the table
-    std::cout << "\n/////////////////////////" << std::endl;
-    std::cout << "/      In Front of      /" << std::endl;
-    std::cout << "/////////////////////////\n" << std::endl;
+    stringstream ss2;
 
-    for(int i =0; i < _objectList.size()+1; i++){
-        cout << "|" << setw(10) << "----------" << ends;
-    }
+    getStringStream(&values[0][0], ss2, "Front");
 
-    cout << "|" << endl << "|" << setw(10) << "" << ends;
-    for(int i = 0; i < _objectList.size(); i++){
-        cout << "|" << setw(10) << _objectList[i].name.toStdString() << ends;
-    }
-
-    cout << "|" << endl;
-
-    for(int i =0; i < _objectList.size()+1; i++){
-        cout << "|" << setw(10) << "----------" << ends;
-    }
-
-    cout << "|" << endl;
-
-    for(int i = 0; i < _objectList.size(); i++){
-        cout << "|" << setw(10) << right << _objectList[i].name.toStdString() << "|" << ends;
-        for(int j = 0; j < _objectList.size(); j++){
-            if(i==j) cout << setw(10) << right << "X" << "|" << ends;
-            else cout << setw(10) << right << setprecision(2)  << values[i][j] << "|" << ends;
-        }
-        cout << endl;
-
-        for(int i =0; i < _objectList.size()+1; i++){
-            cout << "|" << setw(10) << "----------" << ends;
-        }
-
-        cout << "|" << endl;
-    }
+    cout << ss2.str() << endl;
 }
 
 // This function calculate all the values for the relations behind of
@@ -205,43 +109,11 @@ void qsr::calculateQSRBehind(){
         }
     }
 
-    // Print the table
-    std::cout << "\n/////////////////////////" << std::endl;
-    std::cout << "/       Behind of       /" << std::endl;
-    std::cout << "/////////////////////////\n" << std::endl;
+    stringstream ss2;
 
-    for(int i =0; i < _objectList.size()+1; i++){
-        cout << "|" << setw(10) << "----------" << ends;
-    }
+    getStringStream(&values[0][0], ss2, "Behind");
 
-    cout << "|" << endl << "|" << setw(10) << "" << ends;
-    for(int i = 0; i < _objectList.size(); i++){
-        cout << "|" << setw(10) << _objectList[i].name.toStdString() << ends;
-    }
-
-    cout << "|" << endl;
-
-    for(int i =0; i < _objectList.size()+1; i++){
-        cout << "|" << setw(10) << "----------" << ends;
-    }
-
-    cout << "|" << endl;
-
-    for(int i = 0; i < _objectList.size(); i++){
-        cout << "|" << setw(10) << right << _objectList[i].name.toStdString() << "|" << ends;
-        for(int j = 0; j < _objectList.size(); j++){
-            if(i==j) cout << setw(10) << right << "X" << "|" << ends;
-            else cout << setw(10) << right << setprecision(2)  << values[i][j] << "|" << ends;
-        }
-        cout << endl;
-
-        for(int i =0; i < _objectList.size()+1; i++){
-            cout << "|" << setw(10) << "----------" << ends;
-        }
-
-        cout << "|" << endl;
-    }
-    cout << endl;
+    cout << ss2.str() << endl;
 }
 
 // Calculate the center of mass of an object as the centroid of the bounding box
@@ -547,68 +419,101 @@ void qsr::test(){
 }
 
 QString qsr::getDescription(){
-    float values[_objectList.size()][_objectList.size()];
-    stringstream ss;
+    float values_right[_objectList.size()][_objectList.size()];
+    float values_left[_objectList.size()][_objectList.size()];
+    float values_front[_objectList.size()][_objectList.size()];
+    float values_behind[_objectList.size()][_objectList.size()];
 
-    // Improve it not doing all the loops.
+    stringstream ss;
 
     // Right of
     for(int i=0; i < _objectList.size(); i++){
         calculatePointsLandmark(_objectList[i]);
         for(int j=0; j < _objectList.size(); j++){
-            if(j == i) values[j][i] = -1;
+            if(j == i){
+                values_left[j][i] = -1;
+                values_right[j][i] = -1;
+                values_front[j][i] = -1;
+                values_behind[j][i] = -1;
+            }
             else{
                 calculatePointTrajector(_objectList[j]);
-                values[j][i] = qsrOnRight();
+                values_right[j][i] = qsrOnRight();
+                values_left[j][i] = qsrOnLeft();
+                values_front[j][i] = qsrInFront();
+                values_behind[j][i] = qsrBehind();
             }
-            if(values[j][i] >= 0.5 && ( _objectList[i].name.toStdString() != "mug" && _objectList[i].name.toStdString() != "mouse" &&  _objectList[i].name.toStdString() != "Mouse" &&  _objectList[i].name.toStdString() != "Mug")){
+            if(values_right[j][i] >= 0.5 && ( _objectList[i].name.toStdString() != "mug" && _objectList[i].name.toStdString() != "mouse" &&  _objectList[i].name.toStdString() != "Mouse" &&  _objectList[i].name.toStdString() != "Mug")){
                 ss << "- The " << _objectList[j].name.toStdString() << " is to the right of the " << _objectList[i].name.toStdString() << "." << endl << endl;
             }
-        }
-    }
-
-    // Left of
-    for(int i=0; i < _objectList.size(); i++){
-        calculatePointsLandmark(_objectList[i]);
-        for(int j=0; j < _objectList.size(); j++){
-            if(j == i) values[j][i] = -1;
-            else{
-                calculatePointTrajector(_objectList[j]);
-                values[j][i] = qsrOnLeft();
-            }
-            if(values[j][i] >= 0.5 && ( _objectList[i].name.toStdString() != "mug" && _objectList[i].name.toStdString() != "mouse" &&  _objectList[i].name.toStdString() != "Mouse" &&  _objectList[i].name.toStdString() != "Mug")){
+            if(values_left[j][i] >= 0.5 && ( _objectList[i].name.toStdString() != "mug" && _objectList[i].name.toStdString() != "mouse" &&  _objectList[i].name.toStdString() != "Mouse" &&  _objectList[i].name.toStdString() != "Mug")){
                 ss << "- The " << _objectList[j].name.toStdString() << " is to the left of the " << _objectList[i].name.toStdString() << "." << endl << endl;
             }
-        }
-    }
-    // In front
-    for(int i=0; i < _objectList.size(); i++){
-        calculatePointsLandmark(_objectList[i]);
-        for(int j=0; j < _objectList.size(); j++){
-            if(j == i) values[j][i] = -1;
-            else{
-                calculatePointTrajector(_objectList[j]);
-                values[j][i] = qsrInFront();
-            }
-            if(values[j][i] >= 0.5 && ( _objectList[i].name.toStdString() != "mug" && _objectList[i].name.toStdString() != "mouse" &&  _objectList[i].name.toStdString() != "Mouse" &&  _objectList[i].name.toStdString() != "Mug")){
+            if(values_front[j][i] >= 0.5 && ( _objectList[i].name.toStdString() != "mug" && _objectList[i].name.toStdString() != "mouse" &&  _objectList[i].name.toStdString() != "Mouse" &&  _objectList[i].name.toStdString() != "Mug")){
                 ss << "- The " << _objectList[j].name.toStdString() << " is in front of the " << _objectList[i].name.toStdString() << "." << endl << endl;
             }
-        }
-    }
-    // Behind
-    for(int i=0; i < _objectList.size(); i++){
-        calculatePointsLandmark(_objectList[i]);
-        for(int j=0; j < _objectList.size(); j++){
-            if(j == i) values[j][i] = -1;
-            else{
-                calculatePointTrajector(_objectList[j]);
-                values[j][i] = qsrBehind();
-            }
-            if(values[j][i] >= 0.5 && ( _objectList[i].name.toStdString() != "mug" && _objectList[i].name.toStdString() != "mouse" &&  _objectList[i].name.toStdString() != "Mouse" &&  _objectList[i].name.toStdString() != "Mug")){
+            if(values_behind[j][i] >= 0.5 && ( _objectList[i].name.toStdString() != "mug" && _objectList[i].name.toStdString() != "mouse" &&  _objectList[i].name.toStdString() != "Mouse" &&  _objectList[i].name.toStdString() != "Mug")){
                 ss << "- The " << _objectList[j].name.toStdString() << " is behind the " << _objectList[i].name.toStdString() << "." << endl << endl;
             }
         }
     }
 
     return QString::fromStdString(ss.str());
+}
+
+void qsr::getStringStream(float *values, stringstream &ss, string relation){
+
+    // Print the relation header
+    if(relation == "Right"){
+        ss << "/////////////////////////" << endl;
+        ss << "/         Right         /" << endl;
+        ss << "/////////////////////////\n" << endl;
+    }
+    else if(relation == "Left"){
+        ss << "/////////////////////////" << endl;
+        ss << "/         Left          /" << endl;
+        ss << "/////////////////////////\n" << endl;
+    }
+    else if(relation == "Front"){
+        ss << "/////////////////////////" << endl;
+        ss << "/         Front         /" << endl;
+        ss << "/////////////////////////\n" << endl;
+    }
+    else if(relation == "Behind"){
+        ss << "/////////////////////////" << endl;
+        ss << "/         Behind        /" << endl;
+        ss << "/////////////////////////\n" << endl;
+    }
+
+    for(int i =0; i < _objectList.size()+1; i++){
+        ss << "|" << setw(10) << "----------";
+    }
+
+    ss << "|" << endl << "|" << setw(10) << "";
+    for(int i = 0; i < _objectList.size(); i++){
+        ss << "|" << setw(10) << _objectList[i].name.toStdString();
+    }
+
+    ss << "|" << endl;
+
+    for(int i =0; i < _objectList.size()+1; i++){
+        ss << "|" << setw(10) << "----------";
+    }
+
+    ss << "|" << endl;
+
+    for(int i = 0; i < _objectList.size(); i++){
+        ss << "|" << setw(10) << right << _objectList[i].name.toStdString() << "|";
+        for(int j = 0; j < _objectList.size(); j++){
+            if(i==j) ss << setw(10) << right << "X" << "|";
+            else ss << setw(10) << right << setprecision(2)  << values[i*_objectList.size()+j] << "|";
+        }
+        ss << endl;
+
+        for(int i =0; i < _objectList.size()+1; i++){
+            ss << "|" << setw(10) << "----------";
+        }
+
+        ss << "|" << endl;
+    }
 }

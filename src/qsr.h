@@ -48,6 +48,8 @@ private:
 
     float qsrBehind();
 
+    void getStringStream(float *values, std::stringstream& ss, std::string relation);
+
     // I need to explain what is the meaning of each point.
     pcl::PointXYZ _FLDPoint, _FRDPoint, _BRDPoint, _BLDPoint;
     pcl::PointXYZ _FCPoint, _RCPoint, _BCPoint, _LCPoint;
