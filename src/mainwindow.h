@@ -130,6 +130,8 @@ private slots:
 
     void on_actionDescription_of_scene_using_QSR_triggered();
 
+    void on_actionSave_QSR_in_txt_file_triggered();
+
 private:
     // The main window used
     Ui::MainWindow *_ui;

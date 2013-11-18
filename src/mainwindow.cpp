@@ -21,6 +21,9 @@
 #include <math.h>
 #include <eigen3/Eigen/Dense>
 
+#include <iostream>
+#include <fstream>
+
 #include <boost/property_tree/xml_parser.hpp>
 #include <boost/filesystem/path.hpp>
 
@@ -804,8 +807,7 @@ void MainWindow::on_actionSave_PCD_and_export_objects_info_triggered()
     }
 }
 
-
-
+// Enable or disable info messages
 void MainWindow::on_actionShow_info_messages_toggled(bool arg1)
 {
     if(arg1)
@@ -814,6 +816,7 @@ void MainWindow::on_actionShow_info_messages_toggled(bool arg1)
         _showInfoMsgs = false;
 }
 
+// Undo function
 void MainWindow::on_actionUndo_triggered()
 {
     // Reload the previous point cloud and visualize it
@@ -832,6 +835,7 @@ void MainWindow::on_actionUndo_triggered()
     _ui->actionUndo->setEnabled(false);
 }
 
+// Downsampling function
 void MainWindow::on_actionDownsample_point_cloud_triggered()
 {
     // Call the dialog to introduce the filter values
@@ -854,31 +858,61 @@ void MainWindow::on_actionDownsample_point_cloud_triggered()
     _ui->actionUndo->setEnabled(true);
 }
 
+// QSR values displayed in the terminal
 void MainWindow::on_actionQSR_values_triggered()
 {
     if(objectsInfo.numberOfObjects()>1){
         qsr QSR(objectsInfo.getObjectList());
-        QSR.calculateQSROnRight();
-        QSR.calculateQSROnLeft();
+        QSR.calculateQSRRight();
+        QSR.calculateQSRLeft();
         QSR.calculateQSRInFront();
         QSR.calculateQSRBehind();
-        //        QSR.test();
     }
     else QMessageBox::warning(this,
                               "Error",
                               "It is not possible to calculate the QSR values. Add more objects or load an annotation.");
 }
 
+// Obtain a description of the scene using QSR
 void MainWindow::on_actionDescription_of_scene_using_QSR_triggered()
 {
     if(objectsInfo.numberOfObjects()>2){
         qsr QSR(objectsInfo.getObjectList());
         QString description = QSR.getDescription();
-        //        std::cout << description.toStdString() << std::endl;
 
         QMessageBox::information(this,
                                  "Description of the scene",
                                  description);
+
+    }
+    else QMessageBox::warning(this,
+                              "Error",
+                              "It is not possible to obtain a description of the scene. Annotate some objects or load an annotation.");
+}
+
+// Save all the QSR values in a .txt file
+void MainWindow::on_actionSave_QSR_in_txt_file_triggered()
+{
+    if(objectsInfo.numberOfObjects()>2){
+        qsr QSR(objectsInfo.getObjectList());
+        std::string fileName = _fileName.toStdString();
+        fileName.erase(fileName.find_last_of(".")+1, 3);
+        fileName.append("txt");
+
+        QString file = QFileDialog::getSaveFileName(this,
+                                                        tr("Save file"),
+                                                        QString::fromStdString(fileName),
+                                                        tr("Text File(*.txt)"));
+        if(!file.isEmpty()){
+            std::ofstream outputFile;
+            outputFile.open (file.toAscii(), ios::trunc);
+            QString allValues = QSR.getAllValues();
+            outputFile << allValues.toStdString();
+            outputFile.close();
+        }
+        else{
+            QMessageBox::warning(this, "Error", "Text file not saved.");
+        }
 
     }
     else QMessageBox::warning(this,

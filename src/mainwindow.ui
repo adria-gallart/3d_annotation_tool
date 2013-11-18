@@ -1319,17 +1319,24 @@
    </widget>
    <widget class="QMenu" name="menuQSR">
     <property name="title">
-     <string>QSR</string>
+     <string>&amp;QSR</string>
     </property>
+    <widget class="QMenu" name="menuGet_QSR_values">
+     <property name="title">
+      <string>Get all QSR values</string>
+     </property>
+     <addaction name="actionQSR_values"/>
+     <addaction name="actionSave_QSR_in_txt_file"/>
+    </widget>
     <addaction name="actionDescription_of_scene_using_QSR"/>
-    <addaction name="actionQSR_values"/>
+    <addaction name="menuGet_QSR_values"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menu_Display"/>
    <addaction name="menuObjects"/>
-   <addaction name="menu_Help"/>
    <addaction name="menuQSR"/>
+   <addaction name="menu_Help"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -1719,12 +1726,17 @@
   </action>
   <action name="actionQSR_values">
    <property name="text">
-    <string>QSR values (displayed terminal)</string>
+    <string>QSR values displayed in the terminal</string>
    </property>
   </action>
   <action name="actionDescription_of_scene_using_QSR">
    <property name="text">
     <string>Description of scene using QSR</string>
+   </property>
+  </action>
+  <action name="actionSave_QSR_in_txt_file">
+   <property name="text">
+    <string>Save QSR in .txt file</string>
    </property>
   </action>
  </widget>
