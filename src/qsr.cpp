@@ -18,7 +18,7 @@ qsr::qsr(std::vector<object> objectList)
 
 // This function calculate all the values for the relations right of
 // and display its results in the terminal
-void qsr::calculateQSROnRight(){
+void qsr::calculateQSRRight(){
     float values[_objectList.size()][_objectList.size()];
 
     // Calculate values
@@ -29,7 +29,7 @@ void qsr::calculateQSROnRight(){
             if(j == i) values[j][i] = -1;
             else{
                 calculatePointTrajector(_objectList[j]);
-                values[j][i] = qsrOnRight();
+                values[j][i] = qsrRight();
             }
         }
     }
@@ -43,7 +43,7 @@ void qsr::calculateQSROnRight(){
 
 // This function calculate all the values for the relations left of
 // and display its results in the terminal
-void qsr::calculateQSROnLeft(){
+void qsr::calculateQSRLeft(){
     float values[_objectList.size()][_objectList.size()];
 
     // Calculate values
@@ -53,7 +53,7 @@ void qsr::calculateQSROnLeft(){
             if(j == i) values[j][i] = -1;
             else{
                 calculatePointTrajector(_objectList[j]);
-                values[j][i] = qsrOnLeft();
+                values[j][i] = qsrLeft();
             }
         }
     }
@@ -204,7 +204,7 @@ void qsr::calculatePointTrajector(object trajector){
 }
 
 // Calculation of angles and distance for the relation right of
-void qsr::calculateAnglesAndDistanceOnRight(){
+void qsr::calculateAnglesAndDistanceRight(){
     // Front face direction
     Eigen::Vector4f frontDirection4f(_FRDPoint.x - _FLDPoint.x, _FRDPoint.y - _FLDPoint.y, 0, 0);
     Eigen::Vector3f frontDirection3f = frontDirection4f.segment(0,3);
@@ -229,21 +229,21 @@ void qsr::calculateAnglesAndDistanceOnRight(){
     Eigen::Vector3f crossProductRight = frontDirection3f.cross(rightCornerCenterLine3f);
 
     // Calculate the angle and modify depending the orientation
-    _angleRightOnRight = pcl::getAngle3D (rightCornerCenterLine4f, frontDirection4f);
-    if(crossProductRight(2)<0) _angleRightOnRight = 2*M_PI-_angleRightOnRight;
+    _angleRightRight = pcl::getAngle3D (rightCornerCenterLine4f, frontDirection4f);
+    if(crossProductRight(2)<0) _angleRightRight = 2*M_PI-_angleRightRight;
 
     // Cross product to know which is the orientation
     Eigen::Vector3f crossProductLeft = frontDirection3f.cross(leftCornerCenterLine3f);
     // Calculate the angle and modify depending the orientation
-    _angleLeftOnRight = pcl::getAngle3D (leftCornerCenterLine4f, frontDirection4f);
-    if(crossProductLeft(2)>0) _angleLeftOnRight = 2*M_PI-_angleLeftOnRight;
+    _angleLeftRight = pcl::getAngle3D (leftCornerCenterLine4f, frontDirection4f);
+    if(crossProductLeft(2)>0) _angleLeftRight = 2*M_PI-_angleLeftRight;
 
     // Calculate the distance
-    _distanceOnRight = pcl::euclideanDistance(_centerOfMassTrajector, _RCPoint);
+    _distanceRight = pcl::euclideanDistance(_centerOfMassTrajector, _RCPoint);
 }
 
 // Calculation of angles and distance for the relation left of
-void qsr::calculateAnglesAndDistanceOnLeft(){
+void qsr::calculateAnglesAndDistanceLeft(){
     // Front face direction
     Eigen::Vector4f backDirection4f(_BRDPoint.x - _BLDPoint.x, _BRDPoint.y - _BLDPoint.y, 0, 0);
     Eigen::Vector3f backDirection3f = backDirection4f.segment(0,3);
@@ -267,17 +267,17 @@ void qsr::calculateAnglesAndDistanceOnLeft(){
     // Cross product to know which is the orientation
     Eigen::Vector3f crossProductRight = backDirection3f.cross(rightCornerCenterLine3f);
     // Calculate the angle and modify depending the orientation
-    _angleRightOnLeft = pcl::getAngle3D (rightCornerCenterLine4f, backDirection4f);
-    if(crossProductRight(2)<0) _angleRightOnLeft = 2*M_PI-_angleRightOnLeft;
+    _angleRightLeft = pcl::getAngle3D (rightCornerCenterLine4f, backDirection4f);
+    if(crossProductRight(2)<0) _angleRightLeft = 2*M_PI-_angleRightLeft;
 
     // Cross product to know which is the orientation
     Eigen::Vector3f crossProductLeft = backDirection3f.cross(leftCornerCenterLine3f);
     // Calculate the angle and modify depending the orientation
-    _angleLeftOnLeft = pcl::getAngle3D (leftCornerCenterLine4f, backDirection4f);
-    if(crossProductLeft(2)>0) _angleLeftOnLeft = 2*M_PI-_angleLeftOnLeft;
+    _angleLeftLeft = pcl::getAngle3D (leftCornerCenterLine4f, backDirection4f);
+    if(crossProductLeft(2)>0) _angleLeftLeft = 2*M_PI-_angleLeftLeft;
 
     // Calculate the distance
-    _distanceOnLeft = pcl::euclideanDistance(_centerOfMassTrajector, _LCPoint);
+    _distanceLeft = pcl::euclideanDistance(_centerOfMassTrajector, _LCPoint);
 }
 
 // Calculation of angles and distance for the relation in front
@@ -378,44 +378,24 @@ float qsr::distanceFunction(float distance, float perimeter){
     else return exp(-((distance-factor)/0.4)*log(2));
 }
 
-float qsr::qsrOnRight(){
-    calculateAnglesAndDistanceOnRight();
-    //    std::cout << "On right of: " << "angle1: " << pcl::rad2deg(_angleRightOnRight) << " angle2: " << pcl::rad2deg(_angleLeftOnRight) << " distance: " << _distanceOnRight << std::endl;
-    //    std::cout << "Function values. g(angle1): " << angleFunction(_angleRightOnRight) << " g(angle2): " << angleFunction(_angleLeftOnRight) << " f(distance): " << distanceFunction(_distanceOnRight, _perimeterLandmark) << std::endl;
-    //    std::cout << "Final value:" << angleFunction(_angleRightOnRight)*angleFunction(_angleLeftOnRight)*distanceFunction(_distanceOnRight, _perimeterLandmark) << std::endl;
-    return angleFunction(_angleRightOnRight)*angleFunction(_angleLeftOnRight)*distanceFunction(_distanceOnRight, _perimeterLandmark);
+float qsr::qsrRight(){
+    calculateAnglesAndDistanceRight();
+    return angleFunction(_angleRightRight)*angleFunction(_angleLeftRight)*distanceFunction(_distanceRight, _perimeterLandmark);
 }
 
-float qsr::qsrOnLeft(){
-    calculateAnglesAndDistanceOnLeft();
-    //    std::cout << "On left of: " << "angle1: " << pcl::rad2deg(_angleRightOnLeft) << " angle2: " << pcl::rad2deg(_angleLeftOnLeft) << " distance: " << _distanceOnLeft << std::endl;
-    //    std::cout << "Final value:" << angleFunction(_angleRightOnLeft)*angleFunction(_angleLeftOnLeft)*distanceFunction(_distanceOnLeft, _perimeterLandmark) << std::endl;
-    return angleFunction(_angleRightOnLeft)*angleFunction(_angleLeftOnLeft)*distanceFunction(_distanceOnLeft, _perimeterLandmark);
+float qsr::qsrLeft(){
+    calculateAnglesAndDistanceLeft();
+    return angleFunction(_angleRightLeft)*angleFunction(_angleLeftLeft)*distanceFunction(_distanceLeft, _perimeterLandmark);
 }
 
 float qsr::qsrInFront(){
     calculateAnglesAndDistanceInFront();
-    //    std::cout << "In front of: " << "angle1: " << pcl::rad2deg(_angleRightInFront) << " angle2: " << pcl::rad2deg(_angleLeftInFront) << " distance: " << _distanceInFront << std::endl;
-    //    std::cout << "Function values. g(angle1): " << angleFunction(_angleRightInFront) << " g(angle2): " << angleFunction(_angleLeftInFront) << " f(distance): " << distanceFunction(_distanceInFront, _perimeterLandmark) << std::endl;
-    //    std::cout << "Final value: " << angleFunction(_angleRightInFront)*angleFunction(_angleLeftInFront)*distanceFunction(_distanceInFront, _perimeterLandmark) << std::endl;
     return angleFunction(_angleRightInFront)*angleFunction(_angleLeftInFront)*distanceFunction(_distanceInFront, _perimeterLandmark);
 }
 
 float qsr::qsrBehind(){
     calculateAnglesAndDistanceBehind();
     return angleFunction(_angleRightBehind)*angleFunction(_angleLeftBehind)*distanceFunction(_distanceBehind, _perimeterLandmark);
-}
-
-void qsr::test(){
-    //    float angle2;
-    //    for(float angle=0.0; angle <= 2*M_PI; angle+=M_PI_4/30){
-    //        if(pcl::rad2deg(angle) < 180) std::cout << pcl::rad2deg(angle) << " " << angleFunction(angle) << std::endl;
-    //        else std::cout << pcl::rad2deg(angle) - 360 << " " << angleFunction(angle) << std::endl;
-    //    }
-
-    for(float distance = 0.0; distance <= 2; distance+=0.01){
-        std::cout << distance << " " << distanceFunction(distance, 0.3) << " " << distanceFunction(distance, 0.5) <<  std::endl;
-    }
 }
 
 QString qsr::getDescription(){
@@ -438,8 +418,8 @@ QString qsr::getDescription(){
             }
             else{
                 calculatePointTrajector(_objectList[j]);
-                values_right[j][i] = qsrOnRight();
-                values_left[j][i] = qsrOnLeft();
+                values_right[j][i] = qsrRight();
+                values_left[j][i] = qsrLeft();
                 values_front[j][i] = qsrInFront();
                 values_behind[j][i] = qsrBehind();
             }
@@ -485,6 +465,7 @@ void qsr::getStringStream(float *values, stringstream &ss, string relation){
         ss << "/////////////////////////\n" << endl;
     }
 
+    // Print the table
     for(int i =0; i < _objectList.size()+1; i++){
         ss << "|" << setw(10) << "----------";
     }
