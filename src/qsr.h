@@ -19,6 +19,8 @@ public:
 
     QString getDescription();
 
+    QString getAllValues();
+
 private:
     pcl::PointXYZ getCenterOfMass(object obj);
 

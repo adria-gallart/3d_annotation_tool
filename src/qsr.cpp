@@ -406,7 +406,7 @@ QString qsr::getDescription(){
 
     stringstream ss;
 
-    // Right of
+
     for(int i=0; i < _objectList.size(); i++){
         calculatePointsLandmark(_objectList[i]);
         for(int j=0; j < _objectList.size(); j++){
@@ -440,6 +440,47 @@ QString qsr::getDescription(){
 
     return QString::fromStdString(ss.str());
 }
+
+QString qsr::getAllValues(){
+    float values_right[_objectList.size()][_objectList.size()];
+    float values_left[_objectList.size()][_objectList.size()];
+    float values_front[_objectList.size()][_objectList.size()];
+    float values_behind[_objectList.size()][_objectList.size()];
+
+    for(int i=0; i < _objectList.size(); i++){
+        calculatePointsLandmark(_objectList[i]);
+        for(int j=0; j < _objectList.size(); j++){
+            if(j == i){
+                values_left[j][i] = -1;
+                values_right[j][i] = -1;
+                values_front[j][i] = -1;
+                values_behind[j][i] = -1;
+            }
+            else{
+                calculatePointTrajector(_objectList[j]);
+                values_right[j][i] = qsrRight();
+                values_left[j][i] = qsrLeft();
+                values_front[j][i] = qsrInFront();
+                values_behind[j][i] = qsrBehind();
+            }
+        }
+    }
+
+    stringstream ss, ssaux;
+
+    getStringStream(&values_right[0][0], ss, "Right");
+    //    ss << ssaux.str();
+    getStringStream(&values_left[0][0], ss, "Left");
+    //    ss << ssaux.str();
+    getStringStream(&values_front[0][0], ss, "Front");
+    //    ss << ssaux.str();
+    getStringStream(&values_behind[0][0], ss, "Behind");
+    //    ss << ssaux.str();
+
+    return QString::fromStdString(ss.str());
+}
+
+
 
 void qsr::getStringStream(float *values, stringstream &ss, string relation){
 
