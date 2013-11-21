@@ -1321,15 +1321,9 @@
     <property name="title">
      <string>&amp;QSR</string>
     </property>
-    <widget class="QMenu" name="menuGet_QSR_values">
-     <property name="title">
-      <string>Get all QSR values</string>
-     </property>
-     <addaction name="actionQSR_values"/>
-     <addaction name="actionSave_QSR_in_txt_file"/>
-    </widget>
     <addaction name="actionDescription_of_scene_using_QSR"/>
-    <addaction name="menuGet_QSR_values"/>
+    <addaction name="actionQSR_values"/>
+    <addaction name="actionSave_QSR_in_txt_file"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -1581,7 +1575,7 @@
     <string>&amp;Help</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+H</string>
+    <string>F1</string>
    </property>
   </action>
   <action name="actionCoordinate_system">
@@ -1728,15 +1722,24 @@
    <property name="text">
     <string>QSR values displayed in the terminal</string>
    </property>
+   <property name="shortcut">
+    <string>F3</string>
+   </property>
   </action>
   <action name="actionDescription_of_scene_using_QSR">
    <property name="text">
     <string>Description of scene using QSR</string>
    </property>
+   <property name="shortcut">
+    <string>F2</string>
+   </property>
   </action>
   <action name="actionSave_QSR_in_txt_file">
    <property name="text">
     <string>Save QSR in .txt file</string>
+   </property>
+   <property name="shortcut">
+    <string>F4</string>
    </property>
   </action>
  </widget>
