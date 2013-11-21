@@ -933,6 +933,7 @@ void MainWindow::init(){
 
     // Start the bool variables
     _pcdLoaded = false;
+    _pcdLoadError = false;
     _planeDefined = false;
     _planeSegmentated = false;
     _insertingObject = false;
@@ -948,7 +949,7 @@ void MainWindow::init(){
     _ui->qvtkWidget->setAutoFillBackground(true);
 
     //Windows title
-    setWindowTitle("3D annotation tool");
+    setWindowTitle("3D Annotation Tool");
 
     // Clear tree widget
     _ui->treeWidget->clear();
@@ -974,7 +975,7 @@ void MainWindow::init(){
 
 // Used to visualized the point cloud
 void MainWindow::visualize(){
-    if(_pcdLoaded){
+    if(_pcdLoaded || _pcdLoadError){
         // Clean the viewer if another pcd has been loaded before
         viewInteractor.cleanAll();
     }
@@ -1016,7 +1017,7 @@ void MainWindow::open_pcd_file(){
             }
             else{
                 QMessageBox::warning(this, "Error", "Pcd file not loaded, do it again.");
-                _pcdLoaded=false;
+                _pcdLoadError=true;
             }
         }
     }else{

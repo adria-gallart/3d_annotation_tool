@@ -174,7 +174,7 @@ private:
 
 
     // Some bool variables
-    bool _pcdLoaded, _planeDefined, _planeSegmentated;
+    bool _pcdLoaded, _pcdLoadError, _planeDefined, _planeSegmentated;
     bool _insertingObject, _objectModifed;
     bool _itemSelected, _cloudModified;
     bool _showInfoMsgs, _showInitialMsg;
