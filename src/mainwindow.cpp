@@ -537,6 +537,7 @@ void MainWindow::on_actionInsert_new_object_triggered(){
                 // First guess is that the object is lying on the table
                 _objectPose.x = clickedPoints[0].x;
                 _objectPose.y = clickedPoints[0].y;
+                _objectPose.z = 0.0;
 
                 // To messure distance I am not using the z component of the picked points
                 pcl::PointXYZ point1_x_y, point2_x_y, point3_x_y;
@@ -876,7 +877,7 @@ void MainWindow::on_actionQSR_values_triggered()
 // Obtain a description of the scene using QSR
 void MainWindow::on_actionDescription_of_scene_using_QSR_triggered()
 {
-    if(objectsInfo.numberOfObjects()>2){
+    if(objectsInfo.numberOfObjects()>1){
         qsr QSR(objectsInfo.getObjectList());
         QString description = QSR.getDescription();
 
@@ -893,7 +894,7 @@ void MainWindow::on_actionDescription_of_scene_using_QSR_triggered()
 // Save all the QSR values in a .txt file
 void MainWindow::on_actionSave_QSR_in_txt_file_triggered()
 {
-    if(objectsInfo.numberOfObjects()>2){
+    if(objectsInfo.numberOfObjects()>1){
         qsr QSR(objectsInfo.getObjectList());
         std::string fileName = _fileName.toStdString();
         fileName.erase(fileName.find_last_of(".")+1, 3);
