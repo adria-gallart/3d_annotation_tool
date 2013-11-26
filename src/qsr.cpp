@@ -466,16 +466,12 @@ QString qsr::getAllValues(){
         }
     }
 
-    stringstream ss, ssaux;
+    stringstream ss;
 
     getStringStream(&values_right[0][0], ss, "Right");
-    //    ss << ssaux.str();
     getStringStream(&values_left[0][0], ss, "Left");
-    //    ss << ssaux.str();
     getStringStream(&values_front[0][0], ss, "Front");
-    //    ss << ssaux.str();
     getStringStream(&values_behind[0][0], ss, "Behind");
-    //    ss << ssaux.str();
 
     return QString::fromStdString(ss.str());
 }
